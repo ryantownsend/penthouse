@@ -21,7 +21,7 @@ module Penthouse
     # Migrate up/down to a specific version
     # @param tenant_identifier [String, Symbol] the identifier for the tenant to switch to
     # @param version [Integer] the version number to migrate up or down to
-    def run(direction, tentenant_identifierant, version)
+    def run(direction, tenant_identifier, version)
       Penthouse.switch(tenant_identifier) do
         ActiveRecord::Migrator.run(direction, ActiveRecord::Migrator.migrations_paths, version)
       end
