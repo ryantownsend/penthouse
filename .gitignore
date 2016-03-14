@@ -8,4 +8,5 @@
 /pkg/
 /spec/reports/
 /spec/support/database.yml
+/spec/support/octopus.yml
 /tmp/

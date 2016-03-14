@@ -10,7 +10,7 @@ Add this line to your application's Gemfile:
 gem 'penthouse'
 ```
 
-## Usage
+## Basic Usage
 
 If you're using Rails, you just need to configure an initializer at `config/initializers/penthouse.rb`
 
@@ -37,6 +37,18 @@ Rails.application.config.middleware.use Penthouse::App
 ```
 
 It's advised that if you want to customise these classes, you do so by sub-classing `Penthouse::App`, `Penthouse::Routers::BaseRouter` and/or `Penthouse::Runners::BaseRunner` within this initializer.
+
+## Octopus (shard) Usage
+
+If you want to have multiple databases on isolated hardware, you'll need to use the Octopus tenant types. In addition to the above initializer you'll need to configure Octopus:
+
+```ruby
+require 'octopus'
+
+Octopus.setup do |config|
+  config.environments = [Rails.env]
+end
+```
 
 ## Dictionary
 
