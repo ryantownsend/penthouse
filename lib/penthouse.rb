@@ -32,6 +32,17 @@ module Penthouse
       self.tenant = default_tenant
     end
 
+    # Wraps Penthouse.with_tenant and simply executes the block of code for each
+    # tenant within Penthouse.tenant_identifiers
+    # @param default_tenant [String, Symbol] the identifier for the tenant to return to
+    # @param block [Block] the code to execute
+    # @yield [String, Symbol] the identifier for the tenant
+    def each_tenant(default_tenant: tenant, &block)
+      tenant_identifiers.each do |tenant_identifier|
+        with_tenant(tenant_identifier, default_tenant: default_tenant, &block)
+      end
+    end
+
     # Executes the given block of code within a given tenant
     # @param tenant_identifier [String, Symbol] the identifier for the tenant
     # @param runner [Penthouse::Runners::BaseRunner] an optional runner to use, defaults to the one configured
@@ -56,6 +67,12 @@ module Penthouse
         router: Routers::BaseRouter,
         runner: Runners::BaseRunner
       )
+    end
+
+    # Returns a array of tenant identifiers based on the configured setting
+    # @return [Array<String, Symbol>] the list of tenant identifiers
+    def tenant_identifiers
+      configuration.tenant_identifiers.call
     end
   end
 end
