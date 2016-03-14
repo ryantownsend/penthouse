@@ -27,6 +27,10 @@ require 'penthouse/runners/schema_runner'
 Penthouse.configure do |config|
   config.router = Penthouse::Routers::SubdomainRouter
   config.runner = Penthouse::Runners::SchemaRunner
+  # enhance migrations to migrate all tenants
+  config.migrate_tenants = true
+  # setup a proc which will return the tenants
+  config.tenant_identifiers = Proc.new { Account.pluck(:tenant_name) }
 end
 
 Rails.application.config.middleware.use Penthouse::App

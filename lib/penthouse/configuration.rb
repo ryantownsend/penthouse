@@ -18,7 +18,7 @@ module Penthouse
     # @param runner [Penthouse::Runners::BaseRunner] the default runner for your application to use
     # @param migrate_tenants [Boolean] whether you want Penthouse to automatically migrate all tenants
     # @param tenant_identifiers [Proc] some code which must return an array of tenant identifiers (strings/symbols)
-    def initialize(router: nil, runner: nil, migrate_tenants: true, tenant_identifiers: -> { raise NotImplementedError })
+    def initialize(router: nil, runner: nil, migrate_tenants: false, tenant_identifiers: -> { raise NotImplementedError })
       self.router = router
       self.runner = runner
       self.migrate_tenants = migrate_tenants
