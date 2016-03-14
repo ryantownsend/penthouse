@@ -12,7 +12,7 @@
 
 module Penthouse
   class Configuration
-    attr_accessor :router, :runner, :migrate_tenants, :tenants
+    attr_accessor :router, :runner, :migrate_tenants, :tenant_identifiers
 
     # @param router [Penthouse::Routers::BaseRouter] the default router for your application to use
     # @param runner [Penthouse::Runners::BaseRunner] the default runner for your application to use
