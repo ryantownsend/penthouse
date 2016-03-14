@@ -35,7 +35,7 @@ It's advised that if you want to customise these classes, you do so by sub-class
 ## Dictionary
 
 * **Router** – this class receives a Rack request object and returns an identifier (just a string or symbol) for the tenant.
-* **Runner** – this class receives the identifier from the router, then looks up the tenant instance and runs the code within it.
+* **Runner** – this class receives the identifier (either from the router or manually switching), then looks up the tenant instance and runs the code within it.
 
 ## Contributing
 
