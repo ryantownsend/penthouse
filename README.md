@@ -32,6 +32,11 @@ Rails.application.config.middleware.use Penthouse::App
 
 It's advised that if you want to customise these classes, you do so by sub-classing `Penthouse::App`, `Penthouse::Routers::BaseRouter` and/or `Penthouse::Runners::BaseRunner` within this initializer.
 
+## Dictionary
+
+* **Router** – this class receives a Rack request object and returns an identifier (just a string or symbol) for the tenant.
+* **Runner** – this class receives the identifier from the router, then looks up the tenant instance and runs the code within it.
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/ryantownsend/penthouse.
