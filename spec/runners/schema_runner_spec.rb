@@ -3,7 +3,7 @@ require 'activerecord_helper'
 require 'penthouse/runners/schema_runner'
 
 RSpec.describe Penthouse::Runners::SchemaRunner do
-  let(:schema_name) { "test" }
+  let(:schema_name) { "schema_runner_test" }
 
   before(:each) do
     ActiveRecord::Base.connection.execute("create schema if not exists #{schema_name}")
