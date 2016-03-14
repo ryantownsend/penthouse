@@ -32,14 +32,14 @@ module Penthouse
       self.tenant = default_tenant
     end
 
-    # Wraps Penthouse.with_tenant and simply executes the block of code for each
+    # Wraps Penthouse.switch and simply executes the block of code for each
     # tenant within Penthouse.tenant_identifiers
     # @param default_tenant [String, Symbol] the identifier for the tenant to return to
     # @param block [Block] the code to execute
     # @yield [String, Symbol] the identifier for the tenant
-    def each_tenant(default_tenant: tenant, &block)
+    def each_tenant(default_tenant: tenant, runner: configuration.runner, &block)
       tenant_identifiers.each do |tenant_identifier|
-        with_tenant(tenant_identifier, default_tenant: default_tenant, &block)
+        switch(tenant_identifier, runner: runner, &block)
       end
     end
 
