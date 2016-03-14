@@ -38,9 +38,13 @@ RSpec.describe Penthouse do
       described_class.configure do |config|
         config.router = router_class
         config.runner = runner_class
+        config.migrate_tenants = true
+        config.tenant_identifiers = Proc.new { Array.new }
       end
       expect(described_class.configuration.router).to eq(router_class)
       expect(described_class.configuration.runner).to eq(runner_class)
+      expect(described_class.configuration.migrate_tenants).to eq(true)
+      expect(described_class.configuration.tenant_identifiers).to respond_to(:call)
     end
   end
 
