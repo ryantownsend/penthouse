@@ -8,8 +8,8 @@ penthouse_namespace = namespace :penthouse do
 
     tenant_identifiers.each do |tenant_identifier|
       begin
-        puts("Migrating #{tenant} tenant")
-        Apartment::Migrator.migrate(tenant_identifier)
+        puts("Migrating #{tenant_identifier} tenant")
+        Penthouse::Migrator.migrate(tenant_identifier)
       rescue Penthouse::TenantNotFound => e
         puts e.message
       end
@@ -24,8 +24,8 @@ penthouse_namespace = namespace :penthouse do
 
     tenant_identifiers.each do |tenant_identifier|
       begin
-        puts("Rolling back #{tenant} tenant")
-        Apartment::Migrator.rollback(tenant_identifier, step)
+        puts("Rolling back #{tenant_identifier} tenant")
+        Penthouse::Migrator.rollback(tenant_identifier, step)
       rescue Penthouse::TenantNotFound => e
         puts e.message
       end
@@ -42,8 +42,8 @@ penthouse_namespace = namespace :penthouse do
 
       tenant_identifiers.each do |tenant_identifier|
         begin
-          puts("Migrating #{tenant} tenant up")
-          Apartment::Migrator.run(:up, tenant_identifier, version)
+          puts("Migrating #{tenant_identifier} tenant up")
+          Penthouse::Migrator.run(:up, tenant_identifier, version)
         rescue Penthouse::TenantNotFound => e
           puts e.message
         end
@@ -59,15 +59,15 @@ penthouse_namespace = namespace :penthouse do
 
       tenant_identifiers.each do |tenant_identifier|
         begin
-          puts("Migrating #{tenant} tenant down")
-          Apartment::Migrator.run(:down, tenant_identifier, version)
+          puts("Migrating #{tenant_identifier} tenant down")
+          Penthouse::Migrator.run(:down, tenant_identifier, version)
         rescue Penthouse::TenantNotFound => e
           puts e.message
         end
       end
     end
 
-    desc 'Rolls back the tenant one migration and re migrate up (options: STEP=x, VERSION=x).'
+    desc 'Rolls back the tenant one migration and re-migrate up (options: STEP=x, VERSION=x).'
     task :redo do
       if ENV['VERSION']
         penthouse_namespace['migrate:down'].invoke
