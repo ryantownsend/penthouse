@@ -1,0 +1,12 @@
+default: &default
+  host: localhost
+  adapter: postgresql
+  encoding: unicode
+  pool: 10
+  port: 5432
+  username:
+  password:
+
+test:
+  <<: *default
+  database: penthouse_test
