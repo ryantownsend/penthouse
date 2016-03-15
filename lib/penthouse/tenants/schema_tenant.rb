@@ -15,7 +15,6 @@ module Penthouse
 
       # @param identifier [String, Symbol] An identifier for the tenant
       # @param tenant_schema [String] your tenant's schema name in Postgres
-      # @param tenant_schema [String] your tenant's schema name in Postgres
       # @param persistent_schemas [Array<String>] The schemas you always want in the search path
       # @param default_schema [String] The global schema name, usually 'public'
       def initialize(identifier, tenant_schema:, persistent_schemas: ["shared_extensions"], default_schema: "public")
@@ -26,8 +25,8 @@ module Penthouse
         freeze
       end
 
-      # ensures we're on the master Octopus shard, just updates the schema name
-      # with the tenant name
+      # switches to the tenant schema to run the block, ensuring we switch back
+      # afterwards, regardless of whether an exception occurs
       # @param block [Block] The code to execute within the schema
       # @yield [SchemaTenant] The current tenant instance
       def call(&block)
@@ -39,6 +38,36 @@ module Penthouse
           # reset the search path back to the default
           ActiveRecord::Base.connection.schema_search_path = persistent_schemas.unshift(default_schema).join(", ")
         end
+      end
+
+      # creates the tenant schema
+      # @param run_migrations [Boolean] whether or not to run migrations, defaults to Penthouse.configuration.migrate_tenants?
+      # @param db_schema_file [String] a path to the DB schema file to load, defaults to Penthouse.configuration.db_schema_file
+      def create(run_migrations: Penthouse.configuration.migrate_tenants?, db_schema_file: Penthouse.configuration.db_schema_file)
+        sql = ActiveRecord::Base.send(:sanitize_sql_array, ["create schema if not exists %s", tenant_schema])
+        ActiveRecord::Base.connection.exec_query(sql, 'Create Schema')
+        if !!run_migrations
+          if File.exist?(db_schema_file)
+            load(db_schema_file)
+          else
+            raise ArgumentError, "#{db_schema_file} does not exist"
+          end
+        end
+      end
+
+      # drops the tenant schema
+      # @param force [Boolean] whether or not to drop the schema if not empty, defaults to true
+      def delete(force: true)
+        sql = ActiveRecord::Base.send(:sanitize_sql_array, ["drop schema if exists %s %s", tenant_schema, force ? 'cascade' : 'restrict'])
+        ActiveRecord::Base.connection.exec_query(sql, 'Delete Schema')
+      end
+
+      # returns whether or not this tenant's schema exists
+      # @return [Boolean] whether or not the tenant exists
+      def exists?
+        sql = ActiveRecord::Base.send(:sanitize_sql_array, ["select 1 from pg_namespace where nspname = '%s'", tenant_schema])
+        result = ActiveRecord::Base.connection.exec_query(sql, "Schema Exists")
+        !result.rows.empty?
       end
     end
   end

@@ -22,10 +22,6 @@ describe "penthouse rake tasks" do
     ENV['VERSION'] = nil # linux users reported env variable carrying on between tests
   end
 
-  # after(:all) do
-  #   Penthouse::Test.load_schema
-  # end
-
   let(:version) { '1234' }
 
   context 'database migration' do
@@ -33,7 +29,7 @@ describe "penthouse rake tasks" do
     let(:tenant_count)       { tenant_identifiers.length }
 
     before do
-      Penthouse.stub(:tenant_identifiers).and_return(tenant_identifiers)
+      allow(Penthouse).to receive(:tenant_identifiers).and_return(tenant_identifiers)
     end
 
     describe "penthouse:migrate" do

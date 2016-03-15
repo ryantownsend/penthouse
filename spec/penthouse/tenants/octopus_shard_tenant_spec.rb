@@ -5,7 +5,7 @@ require 'penthouse/tenants/octopus_shard_tenant'
 RSpec.describe Penthouse::Tenants::OctopusShardTenant do
   subject { described_class.new(shard_name, shard: shard_name) }
 
-  describe ".call" do
+  describe "#call" do
     context "with a valid shard" do
       let(:shard_name) { "one" }
 

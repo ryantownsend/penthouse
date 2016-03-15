@@ -7,10 +7,6 @@ RSpec.describe Penthouse::Tenants::SchemaTenant do
   let(:persistent_schemas) { ["shared_extensions"] }
   let(:default_schema) { "public" }
 
-  before(:each) do
-    ActiveRecord::Base.connection.execute("create schema if not exists #{schema_name}")
-  end
-
   subject do
     described_class.new(schema_name,
       tenant_schema: schema_name,
@@ -19,7 +15,11 @@ RSpec.describe Penthouse::Tenants::SchemaTenant do
     )
   end
 
-  describe ".call" do
+  describe "#call" do
+    before(:each) do
+      ActiveRecord::Base.connection.execute("create schema if not exists #{schema_name}")
+    end
+
     it "should switch to the relevant Postgres schema" do
       subject.call do
         expect(ActiveRecord::Base.connection.schema_search_path).to eq([schema_name, *persistent_schemas].join(", "))
