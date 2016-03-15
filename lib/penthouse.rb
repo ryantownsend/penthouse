@@ -26,6 +26,7 @@ module Penthouse
     # @param default_tenant [String, Symbol] the identifier for the tenant to return to
     # @param block [Block] the code to execute
     # @yield [String, Symbol] the identifier for the tenant
+    # @return [void]
     def with_tenant(tenant_identifier, default_tenant: tenant, &block)
       self.tenant = tenant_identifier
       block.yield(tenant_identifier)
@@ -38,6 +39,7 @@ module Penthouse
     # @param default_tenant [String, Symbol] the identifier for the tenant to return to
     # @param block [Block] the code to execute
     # @yield [String, Symbol] the identifier for the tenant
+    # @return [void]
     def each_tenant(default_tenant: tenant, runner: configuration.runner, &block)
       tenant_identifiers.each do |tenant_identifier|
         switch(tenant_identifier, runner: runner, &block)
