@@ -15,6 +15,7 @@ module Penthouse
 
     # Sets the currently active tenant identifier
     # @param tenant_identifier [String, Symbol] the identifier for the tenant
+    # @return [void]
     def tenant=(tenant_identifier)
       Thread.current[:tenant] = tenant_identifier
     end
@@ -48,6 +49,7 @@ module Penthouse
     # @param runner [Penthouse::Runners::BaseRunner] an optional runner to use, defaults to the one configured
     # @param block [Block] the code to execute
     # @yield [Penthouse::Tenants::BaseTenant] the tenant instance
+    # @return [void]
     def switch(tenant_identifier, runner: configuration.runner, &block)
       runner.call(tenant_identifier, &block)
     end
@@ -55,6 +57,7 @@ module Penthouse
     # Loads the tenant and creates their data store
     # @param tenant_identifier [String, Symbol] the identifier for the tenant
     # @see Penthouse::Tenants::BaseTenant#delete
+    # @return [void]
     def create(tenant_identifier, runner: configuration.runner, **options)
       switch(tenant_identifier, runner: runner) do |tenant|
         tenant.create(**options)
@@ -64,6 +67,7 @@ module Penthouse
     # Loads the tenant and deletes their data store
     # @param tenant_identifier [String, Symbol] the identifier for the tenant
     # @see Penthouse::Tenants::BaseTenant#delete
+    # @return [void]
     def delete(tenant_identifier, runner: configuration.runner, **options)
       switch(tenant_identifier, runner: runner) do |tenant|
         tenant.delete(**options)
@@ -72,6 +76,7 @@ module Penthouse
 
     # Allows you to configure the router of Penthouse
     # @yield [Penthouse::Configuration]
+    # @return [void]
     def configure(&block)
       # allow the configuration by the block
       block.yield(self.configuration)

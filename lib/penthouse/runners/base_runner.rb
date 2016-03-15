@@ -13,6 +13,7 @@ module Penthouse
 
       # @param tenant_identifier [String, Symbol] The identifier for the tenant
       # @param block [Block] The code to execute within the tenant
+      # @return [void]
       # @raise [Penthouse::TenantNotFound] if the tenant cannot be switched to
       def self.call(tenant_identifier, &block)
         load_tenant(tenant_identifier).call do |tenant|

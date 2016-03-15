@@ -21,16 +21,19 @@ module Penthouse
       # @abstract placeholder for the relevant tenant-switching code
       # @param block [Block] The code to execute within the tenant
       # @yield [BaseTenant] The current tenant instance
+      # @return [void]
       def call(&block)
         raise NotImplementedError
       end
 
       # @abstract creates the tenant data store
+      # @return [void]
       def create(*)
         raise NotImplementedError
       end
 
       # @abstract deletes the tenant data store
+      # @return [void]
       def delete(*)
         raise NotImplementedError
       end

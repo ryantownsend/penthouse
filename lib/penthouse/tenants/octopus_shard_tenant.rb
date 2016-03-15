@@ -29,6 +29,7 @@ module Penthouse
       # switches to the relevant Octopus shard, and processes the block
       # @param block [Block] The code to execute within the connection to the shard
       # @yield [ShardTenant] The current tenant instance
+      # @return [void]
       def call(&block)
         Octopus.using(shard) do
           block.yield(self)

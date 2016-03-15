@@ -12,15 +12,11 @@ module Penthouse
     module Migratable
 
       # @param db_schema_file [String] a path to the DB schema file to load, defaults to Penthouse.configuration.db_schema_file
+      # @return [void]
       def migrate(db_schema_file: Penthouse.configuration.db_schema_file)
         if File.exist?(db_schema_file)
-          # turn off logging schemas
-          ActiveRecord::Schema.verbose = false
           # run the migrations within this schema
-          call do
-            puts ActiveRecord::Base.connection.schema_search_path
-            load(db_schema_file)
-          end
+          call { load(db_schema_file) }
         else
           raise ArgumentError, "#{db_schema_file} does not exist"
         end

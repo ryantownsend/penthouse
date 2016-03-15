@@ -32,6 +32,7 @@ module Penthouse
       # afterwards, regardless of whether an exception occurs
       # @param block [Block] The code to execute within the schema
       # @yield [SchemaTenant] The current tenant instance
+      # @return [void]
       def call(&block)
         begin
           # set the search path to include the tenant
@@ -46,6 +47,7 @@ module Penthouse
       # creates the tenant schema
       # @param run_migrations [Boolean] whether or not to run migrations, defaults to Penthouse.configuration.migrate_tenants?
       # @param db_schema_file [String] a path to the DB schema file to load, defaults to Penthouse.configuration.db_schema_file
+      # @return [void]
       def create(run_migrations: Penthouse.configuration.migrate_tenants?, db_schema_file: Penthouse.configuration.db_schema_file)
         sql = ActiveRecord::Base.send(:sanitize_sql_array, ["create schema if not exists %s", tenant_schema])
         ActiveRecord::Base.connection.exec_query(sql, 'Create Schema')
@@ -56,6 +58,7 @@ module Penthouse
 
       # drops the tenant schema
       # @param force [Boolean] whether or not to drop the schema if not empty, defaults to true
+      # @return [void]
       def delete(force: true)
         sql = ActiveRecord::Base.send(:sanitize_sql_array, ["drop schema if exists %s %s", tenant_schema, force ? 'cascade' : 'restrict'])
         ActiveRecord::Base.connection.exec_query(sql, 'Delete Schema')

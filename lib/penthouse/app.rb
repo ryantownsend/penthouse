@@ -27,6 +27,7 @@ module Penthouse
 
     # @param env [Hash] the environment passed from Rack
     # @raise [Penthouse::TenantNotFound] if the tenant cannot be found/switched to
+    # @return [void]
     def call(env)
       request = Rack::Request.new(env)
       runner.call(router.call(request)) do

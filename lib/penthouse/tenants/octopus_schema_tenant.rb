@@ -18,6 +18,7 @@ module Penthouse
       # with the tenant name
       # @param block [Block] The code to execute within the schema
       # @yield [SchemaTenant] The current tenant instance
+      # @return [void]
       def call(&block)
         Octopus.using(:master) do
           super
@@ -26,18 +27,21 @@ module Penthouse
 
       # creates the tenant schema within the master shard
       # @see Penthouse::Tenants::SchemaTenant#create
+      # @return [void]
       def create(*)
         call { super }
       end
 
       # drops the tenant schema within the master shard
       # @see Penthouse::Tenants::SchemaTenant#delete
+      # @return [void]
       def delete(*)
         call { super }
       end
 
       # returns whether or not the schema exists
       # @see Penthouse::Tenants::SchemaTenant#exists?
+      # @return [void]
       def exists?(*)
         call { super }
       end
