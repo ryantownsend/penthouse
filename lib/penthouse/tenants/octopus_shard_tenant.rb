@@ -8,10 +8,13 @@
 
 require_relative './base_tenant'
 require 'octopus'
+require_relative './migratable'
 
 module Penthouse
   module Tenants
     class OctopusShardTenant < BaseTenant
+      include Migratable
+
       attr_accessor :shard
       private :shard=
 

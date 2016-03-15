@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'octopus_helper'
 require 'penthouse/tenants/octopus_schema_tenant'
+require_relative '../../support/models'
 
 RSpec.describe Penthouse::Tenants::OctopusSchemaTenant do
   let(:schema_name) { "octopus_schema_tenant_test" }
@@ -11,8 +12,8 @@ RSpec.describe Penthouse::Tenants::OctopusSchemaTenant do
   subject do
     described_class.new(schema_name,
       tenant_schema: schema_name,
-      persistent_schemas: ["shared_extensions"],
-      default_schema: "public"
+      persistent_schemas: persistent_schemas,
+      default_schema: default_schema
     )
   end
 
@@ -22,9 +23,21 @@ RSpec.describe Penthouse::Tenants::OctopusSchemaTenant do
       expect(subject.exists?).to be false
     end
 
-    it "should create to the relevant Postgres schema" do
-      subject.create(run_migrations: false, db_schema_file: nil)
-      expect(subject.exists?).to be true
+    context "without running migrations" do
+      it "should create the relevant Postgres schema" do
+        subject.create(run_migrations: false, db_schema_file: nil)
+        expect(subject.exists?).to be true
+      end
+    end
+
+    context "when running migrations" do
+      it "should create the relevant Postgres schema and tables" do
+        subject.create(run_migrations: true, db_schema_file: db_schema_file)
+        subject.call do |tenant|
+          expect(Post.create(title: "test", description: "test")).to be_persisted
+          expect(Post.count).to eq(1)
+        end
+      end
     end
   end
 end

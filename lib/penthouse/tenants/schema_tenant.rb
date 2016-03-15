@@ -6,10 +6,13 @@
 #
 
 require_relative './base_tenant'
+require_relative './migratable'
 
 module Penthouse
   module Tenants
     class SchemaTenant < BaseTenant
+      include Migratable
+
       attr_accessor :tenant_schema, :persistent_schemas, :default_schema
       private :tenant_schema=, :persistent_schemas=, :default_schema=
 
@@ -19,9 +22,9 @@ module Penthouse
       # @param default_schema [String] The global schema name, usually 'public'
       def initialize(identifier, tenant_schema:, persistent_schemas: ["shared_extensions"], default_schema: "public")
         super(identifier)
-        self.tenant_schema = tenant_schema
-        self.persistent_schemas = Array(persistent_schemas).flatten
-        self.default_schema = default_schema
+        self.tenant_schema = tenant_schema.freeze
+        self.persistent_schemas = Array(persistent_schemas).flatten.freeze
+        self.default_schema = default_schema.freeze
         freeze
       end
 
@@ -32,11 +35,11 @@ module Penthouse
       def call(&block)
         begin
           # set the search path to include the tenant
-          ActiveRecord::Base.connection.schema_search_path = persistent_schemas.unshift(tenant_schema).join(", ")
+          ActiveRecord::Base.connection.schema_search_path = persistent_schemas.dup.unshift(tenant_schema).join(", ")
           block.yield(self)
         ensure
           # reset the search path back to the default
-          ActiveRecord::Base.connection.schema_search_path = persistent_schemas.unshift(default_schema).join(", ")
+          ActiveRecord::Base.connection.schema_search_path = persistent_schemas.dup.unshift(default_schema).join(", ")
         end
       end
 
@@ -47,11 +50,7 @@ module Penthouse
         sql = ActiveRecord::Base.send(:sanitize_sql_array, ["create schema if not exists %s", tenant_schema])
         ActiveRecord::Base.connection.exec_query(sql, 'Create Schema')
         if !!run_migrations
-          if File.exist?(db_schema_file)
-            load(db_schema_file)
-          else
-            raise ArgumentError, "#{db_schema_file} does not exist"
-          end
+          migrate(db_schema_file: db_schema_file)
         end
       end
 
@@ -69,6 +68,7 @@ module Penthouse
         result = ActiveRecord::Base.connection.exec_query(sql, "Schema Exists")
         !result.rows.empty?
       end
+
     end
   end
 end

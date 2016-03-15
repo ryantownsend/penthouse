@@ -1,5 +1,5 @@
 ActiveRecord::Schema.define do
-  self.verbose = false
+  self.verbose = true
 
   create_table :posts, force: true do |t|
     t.string :title, null: false

@@ -22,6 +22,7 @@ module Penthouse
         end
       end
 
+      # @abstract returns the tenant object
       # @param tenant_identifier [String, Symbol] The identifier for the tenant
       # @return [Penthouse::Tenants::BaseTenant] An instance of a tenant
       # @raise [Penthouse::TenantNotFound] if the tenant cannot be switched to

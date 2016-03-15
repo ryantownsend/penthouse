@@ -11,7 +11,7 @@ module Penthouse
   module Routers
     class BaseRouter
 
-      # Typically used by the App to return a tenant that can be switched to
+      # @abstract typically used by the App to receive a request and return a tenant that can be switched to
       # @param request [Rack::Request] The request from the Rack app, used to determine the tenant
       # @return [String, Symbol] A tenant identifier
       # @raise [Penthouse::TenantNotFound] if the tenant cannot be found/switched to

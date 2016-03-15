@@ -47,8 +47,27 @@ module Penthouse
     # @param tenant_identifier [String, Symbol] the identifier for the tenant
     # @param runner [Penthouse::Runners::BaseRunner] an optional runner to use, defaults to the one configured
     # @param block [Block] the code to execute
+    # @yield [Penthouse::Tenants::BaseTenant] the tenant instance
     def switch(tenant_identifier, runner: configuration.runner, &block)
       runner.call(tenant_identifier, &block)
+    end
+
+    # Loads the tenant and creates their data store
+    # @param tenant_identifier [String, Symbol] the identifier for the tenant
+    # @see Penthouse::Tenants::BaseTenant#delete
+    def create(tenant_identifier, runner: configuration.runner, **options)
+      switch(tenant_identifier, runner: runner) do |tenant|
+        tenant.create(**options)
+      end
+    end
+
+    # Loads the tenant and deletes their data store
+    # @param tenant_identifier [String, Symbol] the identifier for the tenant
+    # @see Penthouse::Tenants::BaseTenant#delete
+    def delete(tenant_identifier, runner: configuration.runner, **options)
+      switch(tenant_identifier, runner: runner) do |tenant|
+        tenant.delete(**options)
+      end
     end
 
     # Allows you to configure the router of Penthouse
