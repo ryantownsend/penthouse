@@ -41,7 +41,7 @@ module Penthouse
 
       # returns whether or not the schema exists
       # @see Penthouse::Tenants::SchemaTenant#exists?
-      # @return [void]
+      # @return [Boolean] whether or not the schema exists in the master shard
       def exists?(*)
         call { super }
       end
