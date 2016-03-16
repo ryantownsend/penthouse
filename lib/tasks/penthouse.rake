@@ -8,7 +8,7 @@ penthouse_namespace = namespace :penthouse do
 
     tenant_identifiers.each do |tenant_identifier|
       begin
-        puts("Migrating #{tenant_identifier} tenant")
+        puts("Migrating #{tenant_identifier || '***global***'} tenant")
         Penthouse::Migrator.migrate(tenant_identifier)
       rescue Penthouse::TenantNotFound => e
         puts e.message
@@ -24,7 +24,7 @@ penthouse_namespace = namespace :penthouse do
 
     tenant_identifiers.each do |tenant_identifier|
       begin
-        puts("Rolling back #{tenant_identifier} tenant")
+        puts("Rolling back #{tenant_identifier || '***global***'} tenant")
         Penthouse::Migrator.rollback(tenant_identifier, step)
       rescue Penthouse::TenantNotFound => e
         puts e.message
@@ -42,7 +42,7 @@ penthouse_namespace = namespace :penthouse do
 
       tenant_identifiers.each do |tenant_identifier|
         begin
-          puts("Migrating #{tenant_identifier} tenant up")
+          puts("Migrating #{tenant_identifier || '***global***'} tenant up")
           Penthouse::Migrator.run(:up, tenant_identifier, version)
         rescue Penthouse::TenantNotFound => e
           puts e.message
@@ -59,7 +59,7 @@ penthouse_namespace = namespace :penthouse do
 
       tenant_identifiers.each do |tenant_identifier|
         begin
-          puts("Migrating #{tenant_identifier} tenant down")
+          puts("Migrating #{tenant_identifier || '***global***'} tenant down")
           Penthouse::Migrator.run(:down, tenant_identifier, version)
         rescue Penthouse::TenantNotFound => e
           puts e.message
