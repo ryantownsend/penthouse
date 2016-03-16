@@ -82,7 +82,11 @@ penthouse_namespace = namespace :penthouse do
   end
 
   def tenant_identifiers
-    Penthouse.tenant_identifiers
+    if (t = ENV["tenant"] || ENV["tenants"])
+      t.split(",").map(&:strip)
+    else
+      Penthouse.tenant_identifiers
+    end
   end
 
   def warn_if_tenants_empty
