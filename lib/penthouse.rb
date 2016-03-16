@@ -6,19 +6,20 @@ require "penthouse/runners/base_runner"
 
 module Penthouse
   class TenantNotFound < RuntimeError; end
+  CURRENT_TENANT_KEY = 'penthouse_tenant'.freeze
 
   class << self
     # Retrieves the currently active tenant identifier
     # @return [String, Symbol] the current tenant name
     def tenant
-      Thread.current[:tenant]
+      Thread.current[CURRENT_TENANT_KEY]
     end
 
     # Sets the currently active tenant identifier
     # @param tenant_identifier [String, Symbol] the identifier for the tenant
     # @return [void]
     def tenant=(tenant_identifier)
-      Thread.current[:tenant] = tenant_identifier
+      Thread.current[CURRENT_TENANT_KEY] = tenant_identifier
     end
 
     # Similar to Penthouse.tenant=, except this will switch back after the given
