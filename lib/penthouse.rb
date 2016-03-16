@@ -98,10 +98,16 @@ module Penthouse
       )
     end
 
+    # Returns a hash of tenant identifiers based on the configured setting
+    # @return [Hash<String, Symbol => Object>] the hash of tenants
+    def tenants
+      configuration.tenants.call
+    end
+
     # Returns a array of tenant identifiers based on the configured setting
     # @return [Array<String, Symbol>] the list of tenant identifiers
     def tenant_identifiers
-      configuration.tenant_identifiers.call
+      tenants.keys
     end
   end
 end

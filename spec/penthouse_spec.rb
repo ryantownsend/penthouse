@@ -47,13 +47,13 @@ RSpec.describe Penthouse do
 
     it "should use the proc defined by the configuration" do
       subject.configure do |config|
-        config.tenant_identifiers = Proc.new { %w(one two three) }
+        config.tenants = Proc.new { { one: "one", two: "two", three: "three" } }
       end
       @tenants = []
       subject.each_tenant(runner: TestRunner) do |tenant|
         @tenants.push(tenant.identifier)
       end
-      expect(@tenants).to eq(%w(one two three))
+      expect(@tenants).to eq(%i(one two three))
     end
   end
 
@@ -68,12 +68,12 @@ RSpec.describe Penthouse do
         config.router = router_class
         config.runner = runner_class
         config.migrate_tenants = true
-        config.tenant_identifiers = Proc.new { Array.new }
+        config.tenants = Proc.new { Hash.new }
       end
       expect(subject.configuration.router).to eq(router_class)
       expect(subject.configuration.runner).to eq(runner_class)
       expect(subject.configuration.migrate_tenants).to eq(true)
-      expect(subject.configuration.tenant_identifiers).to respond_to(:call)
+      expect(subject.configuration.tenants).to respond_to(:call)
       expect(subject.configuration).to be_frozen
     end
   end
@@ -88,21 +88,40 @@ RSpec.describe Penthouse do
     end
   end
 
-  describe ".tenant_identifiers" do
+  context "when tenants are configured" do
     subject { described_class.dup }
 
-    context "when configured" do
-      it "should use the proc defined by the configuration" do
-        subject.configure do |config|
-          config.tenant_identifiers = Proc.new { %w(one two three) }
-        end
-        expect(subject.tenant_identifiers).to eq(%w(one two three))
+    before(:each) do
+      subject.configure do |config|
+        config.tenants = Proc.new { { one: "one", two: "two", three: "three" } }
       end
     end
 
-    context "when not configured" do
+    describe ".tenant_identifiers" do
+      it "should return an array of the tenant keys" do
+        expect(subject.tenant_identifiers).to eq(%i(one two three))
+      end
+    end
+
+    describe ".tenants" do
+      it "should return a hash as the result of the proc" do
+        expect(subject.tenants).to eq({ one: "one", two: "two", three: "three" })
+      end
+    end
+  end
+
+  context "when tenants are not configured" do
+    subject { described_class.dup }
+
+    describe ".tenant_identifiers" do
       it "should raise a NotImplementedError" do
         expect { subject.tenant_identifiers }.to raise_error(NotImplementedError)
+      end
+    end
+
+    describe ".tenants" do
+      it "should raise a NotImplementedError" do
+        expect { subject.tenants }.to raise_error(NotImplementedError)
       end
     end
   end

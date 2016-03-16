@@ -30,7 +30,11 @@ Penthouse.configure do |config|
   # enhance migrations to migrate all tenants
   config.migrate_tenants = true
   # setup a proc which will return the tenants
-  config.tenant_identifiers = Proc.new { Account.pluck(:tenant_name) }
+  config.tenants = Proc.new do
+    Account.each_with_object({}) do |account, result|
+      result.merge!(account.slug => account)
+    end
+  end
 end
 
 Rails.application.config.middleware.use Penthouse::App
