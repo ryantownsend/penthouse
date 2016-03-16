@@ -43,17 +43,17 @@ module Penthouse
     module ClassMethods
       def migrate_with_penthouse(migrations_paths, target_version = nil, &block)
         unless Penthouse.configuration.migrate_tenants?
-          if defined?(:migrate_without_octopus)
-            return migrate_without_octopus(migrations_paths, target_version, &block)
-          else
-            return migrate_without_penthouse(migrations_paths, target_version, &block)
-          end
+          puts "Skipping penthouse integration"
+          return migrate_without_penthouse(migrations_paths, target_version, &block)
         end
 
-        Penthouse.each_tenant(tenant_identifiers: tenants_to_migrate) do
+        Penthouse.each_tenant(tenant_identifiers: tenants_to_migrate) do |tenant|
+          puts "Migrating #{tenant.identifier}"
           if defined?(:migrate_without_octopus)
+            puts "calling #migrate_without_octopus"
             migrate_without_octopus(migrations_paths, target_version, &block)
           else
+            puts "calling #migrate_without_penthouse"
             migrate_without_penthouse(migrations_paths, target_version, &block)
           end
         end
@@ -61,17 +61,17 @@ module Penthouse
 
       def up_with_penthouse(migrations_paths, target_version = nil, &block)
         unless Penthouse.configuration.migrate_tenants?
-          if defined?(:up_without_octopus)
-            return up_without_octopus(migrations_paths, target_version, &block)
-          else
-            return up_without_penthouse(migrations_paths, target_version, &block)
-          end
+          puts "Skipping penthouse integration"
+          return up_without_penthouse(migrations_paths, target_version, &block)
         end
 
-        Penthouse.each_tenant(tenant_identifiers: tenants_to_migrate) do
+        Penthouse.each_tenant(tenant_identifiers: tenants_to_migrate) do |tenant|
+          puts "Migrating #{tenant.identifier}"
           if defined?(:up_without_octopus)
+            puts "calling #up_without_octopus"
             up_without_octopus(migrations_paths, target_version, &block)
           else
+            puts "calling #up_without_penthouse"
             up_without_penthouse(migrations_paths, target_version, &block)
           end
         end
@@ -79,17 +79,17 @@ module Penthouse
 
       def down_with_penthouse(migrations_paths, target_version = nil, &block)
         unless Penthouse.configuration.migrate_tenants?
-          if defined?(:down_without_octopus)
-            return down_without_octopus(migrations_paths, target_version, &block)
-          else
-            return down_without_penthouse(migrations_paths, target_version, &block)
-          end
+          puts "Skipping penthouse integration"
+          return down_without_penthouse(migrations_paths, target_version, &block)
         end
 
-        Penthouse.each_tenant(tenant_identifiers: tenants_to_migrate) do
+        Penthouse.each_tenant(tenant_identifiers: tenants_to_migrate) do |tenant|
+          puts "Migrating #{tenant.identifier}"
           if defined?(:down_without_octopus)
+            puts "calling #down_without_octopus"
             down_without_octopus(migrations_paths, target_version, &block)
           else
+            puts "calling #down_without_penthouse"
             down_without_penthouse(migrations_paths, target_version, &block)
           end
         end
@@ -97,17 +97,17 @@ module Penthouse
 
       def run_with_penthouse(direction, migrations_paths, target_version)
         unless Penthouse.configuration.migrate_tenants?
-          if defined?(:run_without_octopus)
-            return run_without_octopus(direction, migrations_paths, target_version)
-          else
-            return run_without_penthouse(direction, migrations_paths, target_version)
-          end
+          puts "Skipping penthouse integration"
+          return run_without_penthouse(direction, migrations_paths, target_version)
         end
 
-        Penthouse.each_tenant(tenant_identifiers: tenants_to_migrate) do
+        Penthouse.each_tenant(tenant_identifiers: tenants_to_migrate) do |tenant|
+          puts "Migrating #{tenant.identifier}"
           if defined?(:run_without_octopus)
+            puts "calling #run_without_octopus"
             run_without_octopus(direction, migrations_paths, target_version)
           else
+            puts "calling #run_without_penthouse"
             run_without_penthouse(direction, migrations_paths, target_version)
           end
         end
