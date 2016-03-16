@@ -1,3 +1,4 @@
+require "penthouse/railtie" if defined?(Rails)
 require "penthouse/version"
 require "penthouse/configuration"
 require "penthouse/routers/base_router"
