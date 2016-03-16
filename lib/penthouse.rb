@@ -1,4 +1,4 @@
-require "penthouse/railtie" if defined?(Rails)
+require "penthouse/migrator"
 require "penthouse/version"
 require "penthouse/configuration"
 require "penthouse/routers/base_router"
@@ -37,12 +37,13 @@ module Penthouse
 
     # Wraps Penthouse.switch and simply executes the block of code for each
     # tenant within Penthouse.tenant_identifiers
+    # @param tenant_identifiers [Array<String, Symbol>, nil] the array of tenants to loop through
     # @param default_tenant [String, Symbol] the identifier for the tenant to return to
     # @param block [Block] the code to execute
     # @yield [String, Symbol] the identifier for the tenant
     # @return [void]
-    def each_tenant(default_tenant: tenant, runner: configuration.runner, &block)
-      tenant_identifiers.each do |tenant_identifier|
+    def each_tenant(tenant_identifiers: nil, default_tenant: tenant, runner: configuration.runner, &block)
+      (tenant_identifiers || self.tenant_identifiers).each do |tenant_identifier|
         switch(tenant_identifier, runner: runner, &block)
       end
     end

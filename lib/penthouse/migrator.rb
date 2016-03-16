@@ -1,56 +1,120 @@
-# shamelessly copied & adjusted from Apartment
-# @see https://github.com/influitive/apartment/blob/master/lib/apartment/migrator.rb
-# overrides Octopus's auto-switching to shards
-# @see https://github.com/thiagopradi/octopus/blob/master/lib/octopus/migration.rb
+require 'active_record'
+require 'set'
+require 'active_support/core_ext/module/aliasing'
+require 'active_support/core_ext/array/wrap'
 
 module Penthouse
-  module Migrator
-
-    extend self
-
-    # Migrate to latest version
-    # @param tenant_identifier [String, Symbol] the identifier for the tenant to switch to
-    # @return [void]
-    def migrate(tenant_identifier, version)
-      Penthouse.switch(tenant_identifier) do
-        if migrator.respond_to?(:migrate_without_octopus)
-          migrator.migrate_without_octopus(migrator.migrations_paths, version)
-        else
-          migrator.migrate(migrator.migrations_paths, version)
-        end
-      end
+  module Migration
+    def self.included(base)
+      base.alias_method_chain :announce, :penthouse
     end
 
-    # Migrate up/down to a specific version
-    # @param tenant_identifier [String, Symbol] the identifier for the tenant to switch to
-    # @param version [Integer] the version number to migrate up or down to
-    # @return [void]
-    def run(direction, tenant_identifier, version)
-      Penthouse.switch(tenant_identifier) do
-        if migrator.respond_to?(:run_without_octopus)
-          migrator.run_without_octopus(direction, migrator.migrations_paths, version)
-        else
-          migrator.run(direction, migrator.migrations_paths, version)
-        end
-      end
+    def announce_with_penthouse(message)
+      announce_without_penthouse("#{message} - #{current_tenant}")
     end
 
-    # rollback latest migration `step` number of times
-    # @param tenant_identifier [String, Symbol] the identifier for the tenant to switch to
-    # @param step [Integer] how many migrations to rollback by
-    # @return [void]
-    def rollback(tenant_identifier, step = 1)
-      Penthouse.switch(tenant_identifier) do
-        if migrator.respond_to?(:rollback_without_octopus)
-          migrator.rollback_without_octopus(migrator.migrations_paths, step)
-        else
-          migrator.rollback(migrator.migrations_paths, step)
-        end
-      end
-    end
-
-    def migrator
-      ActiveRecord::Migrator
+    def current_tenant
+      "Tenant: #{Penthouse.tenant || '*** global ***'}"
     end
   end
 end
+
+module Penthouse
+  module Migrator
+    def self.included(base)
+      base.extend(ClassMethods)
+
+      base.class_eval do
+        class << self
+          alias_method_chain :migrate, :penthouse
+          alias_method_chain :up,      :penthouse
+          alias_method_chain :down,    :penthouse
+          alias_method_chain :run,     :penthouse
+        end
+      end
+    end
+
+    module ClassMethods
+      def migrate_with_penthouse(migrations_paths, target_version = nil, &block)
+        unless Penthouse.configuration.migrate_tenants?
+          if defined?(:migrate_without_octopus)
+            return migrate_without_octopus(migrations_paths, target_version, &block)
+          else
+            return migrate_without_penthouse(migrations_paths, target_version, &block)
+          end
+        end
+
+        Penthouse.each_tenant(tenant_identifiers: tenants_to_migrate) do
+          if defined?(:migrate_without_octopus)
+            migrate_without_octopus(migrations_paths, target_version, &block)
+          else
+            migrate_without_penthouse(migrations_paths, target_version, &block)
+          end
+        end
+      end
+
+      def up_with_penthouse(migrations_paths, target_version = nil, &block)
+        unless Penthouse.configuration.migrate_tenants?
+          if defined?(:up_without_octopus)
+            return up_without_octopus(migrations_paths, target_version, &block)
+          else
+            return up_without_penthouse(migrations_paths, target_version, &block)
+          end
+        end
+
+        Penthouse.each_tenant(tenant_identifiers: tenants_to_migrate) do
+          if defined?(:up_without_octopus)
+            up_without_octopus(migrations_paths, target_version, &block)
+          else
+            up_without_penthouse(migrations_paths, target_version, &block)
+          end
+        end
+      end
+
+      def down_with_penthouse(migrations_paths, target_version = nil, &block)
+        unless Penthouse.configuration.migrate_tenants?
+          if defined?(:down_without_octopus)
+            return down_without_octopus(migrations_paths, target_version, &block)
+          else
+            return down_without_penthouse(migrations_paths, target_version, &block)
+          end
+        end
+
+        Penthouse.each_tenant(tenant_identifiers: tenants_to_migrate) do
+          if defined?(:down_without_octopus)
+            down_without_octopus(migrations_paths, target_version, &block)
+          else
+            down_without_penthouse(migrations_paths, target_version, &block)
+          end
+        end
+      end
+
+      def run_with_penthouse(direction, migrations_paths, target_version)
+        unless Penthouse.configuration.migrate_tenants?
+          if defined?(:run_without_octopus)
+            return run_without_octopus(direction, migrations_paths, target_version)
+          else
+            return run_without_penthouse(direction, migrations_paths, target_version)
+          end
+        end
+
+        Penthouse.each_tenant(tenant_identifiers: tenants_to_migrate) do
+          if defined?(:run_without_octopus)
+            run_without_octopus(direction, migrations_paths, target_version)
+          else
+            run_without_penthouse(direction, migrations_paths, target_version)
+          end
+        end
+      end
+
+      def tenants_to_migrate
+        if (t = ENV["tenant"] || ENV["tenants"])
+          t.split(",").map(&:strip)
+        end
+      end
+    end
+  end
+end
+
+ActiveRecord::Migration.send(:include, Penthouse::Migration)
+ActiveRecord::Migrator.send(:include, Penthouse::Migrator)

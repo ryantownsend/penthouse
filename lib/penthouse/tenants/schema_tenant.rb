@@ -7,6 +7,7 @@
 
 require_relative './base_tenant'
 require_relative './migratable'
+require 'active_record'
 
 module Penthouse
   module Tenants
