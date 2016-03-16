@@ -6,10 +6,12 @@ penthouse_namespace = namespace :penthouse do
   task :migrate do
     warn_if_tenants_empty
 
+    version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
+
     tenant_identifiers.each do |tenant_identifier|
       begin
         puts("Migrating #{tenant_identifier || '***global***'} tenant")
-        Penthouse::Migrator.migrate(tenant_identifier)
+        Penthouse::Migrator.migrate(tenant_identifier, version)
       rescue Penthouse::TenantNotFound => e
         puts e.message
       end
