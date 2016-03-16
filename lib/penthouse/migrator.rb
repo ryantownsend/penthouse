@@ -42,6 +42,8 @@ module Penthouse
 
     module ClassMethods
       def migrate_with_penthouse(migrations_paths, target_version = nil, &block)
+        puts "#migrate_with_penthouse called"
+
         unless Penthouse.configuration.migrate_tenants?
           puts "Skipping penthouse integration"
           return migrate_without_penthouse(migrations_paths, target_version, &block)
@@ -60,6 +62,8 @@ module Penthouse
       end
 
       def up_with_penthouse(migrations_paths, target_version = nil, &block)
+        puts "#up_with_penthouse called"
+
         unless Penthouse.configuration.migrate_tenants?
           puts "Skipping penthouse integration"
           return up_without_penthouse(migrations_paths, target_version, &block)
@@ -78,6 +82,8 @@ module Penthouse
       end
 
       def down_with_penthouse(migrations_paths, target_version = nil, &block)
+        puts "#down_with_penthouse called"
+
         unless Penthouse.configuration.migrate_tenants?
           puts "Skipping penthouse integration"
           return down_without_penthouse(migrations_paths, target_version, &block)
@@ -96,6 +102,8 @@ module Penthouse
       end
 
       def run_with_penthouse(direction, migrations_paths, target_version)
+        puts "#run_with_penthouse called"
+
         unless Penthouse.configuration.migrate_tenants?
           puts "Skipping penthouse integration"
           return run_without_penthouse(direction, migrations_paths, target_version)
@@ -114,9 +122,16 @@ module Penthouse
       end
 
       def tenants_to_migrate
-        if (t = ENV["TENANT"] || ENV["TENANTS"])
-          t.split(",").map(&:strip)
+        return @tenants_to_migrate if defined?(@tenants_to_migrate)
+        @tenants_to_migrate = begin
+          if (t = ENV["TENANT"] || ENV["TENANTS"])
+            t.split(",").map(&:strip)
+          else
+            Penthouse.tenant_identifiers
+          end
         end
+        puts "#tenants_to_migrate = #{@tenants_to_migrate}"
+        @tenants_to_migrate
       end
     end
   end
