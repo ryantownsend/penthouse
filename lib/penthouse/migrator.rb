@@ -108,7 +108,7 @@ module Penthouse
       end
 
       def tenants_to_migrate
-        if (t = ENV["tenant"] || ENV["tenants"])
+        if (t = ENV["TENANT"] || ENV["TENANTS"])
           t.split(",").map(&:strip)
         end
       end
