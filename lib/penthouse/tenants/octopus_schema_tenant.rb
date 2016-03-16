@@ -14,14 +14,15 @@ module Penthouse
   module Tenants
     class OctopusSchemaTenant < SchemaTenant
 
-      # ensures we're on the master Octopus shard, just updates the schema name
-      # with the tenant name
+      # ensures we're on the correct Octopus shard, then just updates the schema
+      # name with the tenant name
+      # @param shard [String, Symbol] The shard to execute within, usually master
       # @param block [Block] The code to execute within the schema
       # @yield [SchemaTenant] The current tenant instance
       # @return [void]
-      def call(&block)
-        Octopus.using(:master) do
-          super
+      def call(shard: :master, &block)
+        Octopus.using(shard) do
+          super(&block)
         end
       end
 
