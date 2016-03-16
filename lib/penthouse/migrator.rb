@@ -30,6 +30,12 @@ module Penthouse
           alias_method_chain :up,      :penthouse
           alias_method_chain :down,    :penthouse
           alias_method_chain :run,     :penthouse
+
+          # override any new Octopus methods with the new Penthouse ones
+          alias_method :migrate_with_octopus, :migrate_with_penthouse
+          alias_method :up_with_octopus,      :up_with_penthouse
+          alias_method :down_with_octopus,    :down_with_penthouse
+          alias_method :run_with_octopus,     :run_with_penthouse
         end
       end
     end
