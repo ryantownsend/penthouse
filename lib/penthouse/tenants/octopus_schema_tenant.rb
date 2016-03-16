@@ -20,7 +20,7 @@ module Penthouse
       # @param block [Block] The code to execute within the schema
       # @yield [SchemaTenant] The current tenant instance
       # @return [void]
-      def call(shard: :master, &block)
+      def call(shard: Octopus.master_shard, &block)
         Octopus.using(shard) do
           super(&block)
         end
