@@ -5,7 +5,7 @@ module Penthouse
     # Ensure rake tasks are loaded
     rake_tasks do
       load 'tasks/penthouse.rake'
-      require 'penthouse/tasks/enhancements' if Apartment.db_migrate_tenants
+      require 'penthouse/tasks/enhancements'
     end
   end
 end
