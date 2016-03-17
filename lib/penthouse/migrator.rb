@@ -37,7 +37,24 @@ module Penthouse
           alias_method :down_with_octopus,    :down_with_penthouse
           alias_method :run_with_octopus,     :run_with_penthouse
         end
+
+        alias_method_chain :migrate,    :penthouse
+        alias_method_chain :migrations, :penthouse
+
+        # override any new Octopus methods with the new Penthouse ones
+        alias_method :migrate_with_octopus,    :migrate_with_penthouse
+        alias_method :migrations_with_octopus, :migrations_with_penthouse
       end
+    end
+
+    # this may seem stupid but it gets around issues with Octopus
+    def migrate_with_penthouse(*args)
+      migrate_without_penthouse(*args)
+    end
+
+    # this may seem stupid but it gets around issues with Octopus
+    def migrations_with_penthouse
+      migrations_without_penthouse
     end
 
     module ClassMethods
@@ -46,7 +63,7 @@ module Penthouse
           return migrate_without_penthouse(migrations_paths, target_version, &block)
         end
 
-        Penthouse.each_tenant(tenant_identifiers: tenants_to_migrate) do |tenant|
+        wrap_penthouse do
           migrate_without_penthouse(migrations_paths, target_version, &block)
         end
       end
@@ -56,18 +73,18 @@ module Penthouse
           return up_without_penthouse(migrations_paths, target_version, &block)
         end
 
-        Penthouse.each_tenant(tenant_identifiers: tenants_to_migrate) do |tenant|
-          up_without_penthouse(migrations_paths, target_version, &block)
+        wrap_penthouse do
+          up_without_penthouse(migrations_paths, target_version)
         end
       end
 
       def down_with_penthouse(migrations_paths, target_version = nil, &block)
         unless Penthouse.configuration.migrate_tenants?
-          return down_without_penthouse(migrations_paths, target_version, &block)
+          return down_without_penthouse(migrations_paths, target_version)
         end
 
-        Penthouse.each_tenant(tenant_identifiers: tenants_to_migrate) do |tenant|
-          down_without_penthouse(migrations_paths, target_version, &block)
+        wrap_penthouse do
+          down_without_penthouse(migrations_paths, target_version)
         end
       end
 
@@ -76,12 +93,20 @@ module Penthouse
           return run_without_penthouse(direction, migrations_paths, target_version)
         end
 
-        Penthouse.each_tenant(tenant_identifiers: tenants_to_migrate) do |tenant|
+        wrap_penthouse do
           run_without_penthouse(direction, migrations_paths, target_version)
         end
       end
 
       private
+
+      def wrap_penthouse(&block)
+        if Penthouse.tenant
+          block.yield
+        else
+          Penthouse.each_tenant(tenant_identifiers: tenants_to_migrate, &block)
+        end
+      end
 
       def tenants_to_migrate
         return @tenants_to_migrate if defined?(@tenants_to_migrate)
