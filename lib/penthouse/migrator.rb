@@ -1,7 +1,5 @@
 require 'active_record'
-require 'set'
 require 'active_support/core_ext/module/aliasing'
-require 'active_support/core_ext/array/wrap'
 
 module Penthouse
   module Migration
