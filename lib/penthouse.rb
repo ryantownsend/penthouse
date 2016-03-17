@@ -43,7 +43,7 @@ module Penthouse
     # @param block [Block] the code to execute
     # @yield [String, Symbol] the identifier for the tenant
     # @return [void]
-    def each_tenant(tenant_identifiers: self.tenant_identifiers, default_tenant: self.tenant, runner: self.configuration.runner, &block)
+    def each_tenant(tenant_identifiers: self.tenant_identifiers, runner: self.configuration.runner, &block)
       tenant_identifiers.each do |tenant_identifier|
         switch(tenant_identifier, runner: runner, &block)
       end
