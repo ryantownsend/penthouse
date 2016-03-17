@@ -25,6 +25,7 @@ Gem::Specification.new do |spec|
   # testing
   spec.add_development_dependency 'rspec', '~> 3.4.0'
   spec.add_development_dependency 'simplecov', '~> 0.11.2'
+  spec.add_development_dependency 'rubocop', '~> 0.38'
   # web
   spec.add_development_dependency 'rack', '~> 1.6.4'
   # db

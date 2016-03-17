@@ -1,0 +1,16 @@
+engines:
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - ruby
+  reek:
+    enabled: true
+  bundler-audit:
+    enabled: true
+  rubocop:
+    enabled: true
+ratings:
+  paths:
+    - Gemfile.lock
+    - "**.rb"
