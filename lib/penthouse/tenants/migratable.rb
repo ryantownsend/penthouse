@@ -16,7 +16,12 @@ module Penthouse
       def migrate(db_schema_file: Penthouse.configuration.db_schema_file)
         if File.exist?(db_schema_file)
           # run the migrations within this schema
-          call { load(db_schema_file) }
+          call do
+            # don't output all the log messages
+            ActiveRecord::Schema.verbose = false
+            # run the schema file to migrate this tenant
+            load(db_schema_file)
+          end
         else
           raise ArgumentError, "#{db_schema_file} does not exist"
         end
