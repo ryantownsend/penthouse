@@ -18,10 +18,6 @@ If you're using Rails, you just need to configure an initializer at `config/init
 require 'penthouse'
 # include the standard Rack app
 require 'penthouse/app'
-# include the automated Sidekiq integration, should you need it
-require 'penthouse/sidekiq' if defined?(Sidekiq)
-# include the automated ActiveJob integration, should you need it
-require 'penthouse/active_job' if defined?(ActiveJob)
 # require the relevant router/runner you wish to use
 require 'penthouse/routers/subdomain_router'
 require 'penthouse/runners/schema_runner'
@@ -54,6 +50,26 @@ require 'octopus'
 Octopus.setup do |config|
   config.environments = [Rails.env]
 end
+```
+
+## ActiveJob
+
+If you are using ActiveJob, you'll need to create an `active_job.rb` initializer:
+
+```ruby
+require 'penthouse/active_job'
+
+class ActiveJob::Base
+  include Penthouse::ActiveJob
+end
+```
+
+## Sidekiq
+
+If you are using Sidekiq, you simply need to include the Penthouse module, this can be done in the `penthouse.rb` initializer:
+
+```ruby
+require 'penthouse/sidekiq'
 ```
 
 ## Dictionary
