@@ -3,7 +3,7 @@ module Penthouse
     module Middleware
       class Client
         def call(worker_class, item, queue, redis_pool=nil)
-          item['tenant'] ||= Penthouse.current_tenant
+          item['tenant'] ||= Penthouse.tenant
           yield
         end
       end

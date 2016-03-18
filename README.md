@@ -18,8 +18,10 @@ If you're using Rails, you just need to configure an initializer at `config/init
 require 'penthouse'
 # include the standard Rack app
 require 'penthouse/app'
-# include the automated Sidekiq integration, should you be using it
+# include the automated Sidekiq integration, should you need it
 require 'penthouse/sidekiq' if defined?(Sidekiq)
+# include the automated ActiveJob integration, should you need it
+require 'penthouse/active_job' if defined?(ActiveJob)
 # require the relevant router/runner you wish to use
 require 'penthouse/routers/subdomain_router'
 require 'penthouse/runners/schema_runner'
