@@ -16,20 +16,32 @@ module Penthouse
       # @return [void]
       # @raise [Penthouse::TenantNotFound] if the tenant cannot be switched to
       def self.call(tenant_identifier, &block)
-        load_tenant(tenant_identifier).call do |tenant|
+        previous_tenant_indentifier = call_stack.last || 'public'
+        call_stack.push(tenant_identifier)
+
+        load_tenant(tenant_identifier, previous_tenant_indentifier).call do |tenant|
           Penthouse.with_tenant(tenant.identifier) do
             block.yield(tenant)
           end
         end
+        
+        call_stack.pop
       end
 
       # @abstract returns the tenant object
       # @param tenant_identifier [String, Symbol] The identifier for the tenant
       # @return [Penthouse::Tenants::BaseTenant] An instance of a tenant
       # @raise [Penthouse::TenantNotFound] if the tenant cannot be switched to
-      def self.load_tenant(tenant_identifier)
+      def self.load_tenant(tenant_identifier, previous_tenant_indentifier= 'public')
         raise NotImplementedError
       end
+      
+      private
+      
+      def self.call_stack
+        @call_stack ||= []
+      end
+      
     end
   end
 end

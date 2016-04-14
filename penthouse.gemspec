@@ -33,4 +33,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'activesupport', '~> 4.2.6'
   spec.add_development_dependency 'activerecord', '~> 4.2.6'
   spec.add_development_dependency 'pg'
+  spec.add_development_dependency 'guard-rspec'
 end

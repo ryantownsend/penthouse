@@ -9,7 +9,7 @@ RSpec.describe Penthouse do
   end
 
   TestRunner = Class.new(Penthouse::Runners::BaseRunner) do
-    def self.load_tenant(tenant_identifier)
+    def self.load_tenant(tenant_identifier, *args)
       TestTenant.new(tenant_identifier)
     end
   end
@@ -86,6 +86,19 @@ RSpec.describe Penthouse do
       end
       expect(described_class.tenant).to eq(original_tenant)
     end
+    
+    it 'should honour nested switches' do
+      described_class.switch("outer_test", runner: TestRunner) do |tenant|
+        described_class.switch("inner_test", runner: TestRunner) do |tenant|
+          expect(described_class.tenant).to eq("inner_test")
+          expect(tenant.identifier).to eq("inner_test")
+        end
+        expect(described_class.tenant).to eq("outer_test")
+        expect(tenant.identifier).to eq("outer_test")
+      end
+      expect(described_class.tenant).to eq(original_tenant)
+    end
+    
   end
 
   context "when tenants are configured" do
