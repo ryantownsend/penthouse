@@ -19,13 +19,16 @@ module Penthouse
         previous_tenant_indentifier = call_stack.last || 'public'
         call_stack.push(tenant_identifier)
 
+        result = nil
+
         load_tenant(tenant_identifier, previous_tenant_indentifier).call do |tenant|
           Penthouse.with_tenant(tenant.identifier) do
-            block.yield(tenant)
+            result = block.yield(tenant)
           end
         end
         
         call_stack.pop
+        result
       end
 
       # @abstract returns the tenant object
