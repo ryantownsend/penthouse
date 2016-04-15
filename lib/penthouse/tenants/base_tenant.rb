@@ -14,7 +14,7 @@ module Penthouse
       private :identifier=
 
       # @param identifier [String, Symbol] An identifier for the tenant
-      def initialize(identifier)
+      def initialize(identifier:, **args)
         self.identifier = identifier
       end
 

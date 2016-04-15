@@ -45,7 +45,7 @@ module Penthouse
     # @return [void]
     def each_tenant(tenant_identifiers: self.tenant_identifiers, runner: self.configuration.runner, &block)
       tenant_identifiers.each do |tenant_identifier|
-        switch(tenant_identifier, runner: runner, &block)
+        switch(tenant_identifier: tenant_identifier, runner: runner, &block)
       end
     end
 
@@ -55,8 +55,8 @@ module Penthouse
     # @param block [Block] the code to execute
     # @yield [Penthouse::Tenants::BaseTenant] the tenant instance
     # @return [void]
-    def switch(tenant_identifier, runner: self.configuration.runner, &block)
-      runner.call(tenant_identifier, &block)
+    def switch(tenant_identifier:, runner: self.configuration.runner, &block)
+      runner.call(tenant_identifier: tenant_identifier, &block)
     end
 
     # Loads the tenant and creates their data store

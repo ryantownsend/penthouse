@@ -22,8 +22,8 @@ module Penthouse
       # @param persistent_schemas [Array<String>] The schemas you always want in the search path
       # @param default_schema [String] The global schema name, usually 'public'
       # @param previous_schema [String] The previous schema name, usually 'public' unless dealing with nested calls.
-      def initialize(identifier, tenant_schema:, persistent_schemas: ["shared_extensions"], default_schema: "public", previous_schema: default_schema)
-        super(identifier)
+      def initialize(identifier:, tenant_schema:, persistent_schemas: ["shared_extensions"], default_schema: "public", previous_schema: default_schema)
+        super
         self.tenant_schema = tenant_schema.freeze
         self.persistent_schemas = Array(persistent_schemas).flatten.freeze
         self.default_schema = default_schema.freeze
