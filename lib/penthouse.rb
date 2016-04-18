@@ -29,7 +29,7 @@ module Penthouse
     # @param block [Block] the code to execute
     # @yield [String, Symbol] the identifier for the tenant
     # @return [void]
-    def with_tenant(tenant_identifier, default_tenant: self.tenant, &block)
+    def with_tenant(tenant_identifier:, default_tenant: self.tenant, &block)
       self.tenant = tenant_identifier
       block.yield(tenant_identifier)
     ensure
@@ -63,8 +63,8 @@ module Penthouse
     # @param tenant_identifier [String, Symbol] the identifier for the tenant
     # @see Penthouse::Tenants::BaseTenant#delete
     # @return [void]
-    def create(tenant_identifier, runner: self.configuration.runner, **options)
-      switch(tenant_identifier, runner: runner) do |tenant|
+    def create(tenant_identifier:, runner: self.configuration.runner, **options)
+      switch(tenant_identifier: tenant_identifier, runner: runner) do |tenant|
         tenant.create(**options)
       end
     end
@@ -73,8 +73,8 @@ module Penthouse
     # @param tenant_identifier [String, Symbol] the identifier for the tenant
     # @see Penthouse::Tenants::BaseTenant#delete
     # @return [void]
-    def delete(tenant_identifier, runner: self.configuration.runner, **options)
-      switch(tenant_identifier, runner: runner) do |tenant|
+    def delete(tenant_identifier:, runner: self.configuration.runner, **options)
+      switch(tenant_identifier: tenant_identifier, runner: runner) do |tenant|
         tenant.delete(**options)
       end
     end

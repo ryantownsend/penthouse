@@ -25,7 +25,7 @@ module Penthouse
 
         begin
           load_tenant(tenant_identifier: tenant_identifier, previous_tenant_identifier: previous_tenant_identifier).call do |tenant|
-            Penthouse.with_tenant(tenant.identifier) do
+            Penthouse.with_tenant(tenant_identifier: tenant.identifier) do
               result = block.yield(tenant)
             end
           end

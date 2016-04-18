@@ -69,7 +69,7 @@ module Penthouse
 
       # returns whether or not this tenant's schema exists
       # @return [Boolean] whether or not the tenant exists
-      def exists?
+      def exists?(**)
         sql = ActiveRecord::Base.send(:sanitize_sql_array, ["select 1 from pg_namespace where nspname = '%s'", tenant_schema])
         result = ActiveRecord::Base.connection.exec_query(sql, "Schema Exists")
         !result.rows.empty?

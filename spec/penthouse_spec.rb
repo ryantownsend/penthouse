@@ -37,7 +37,7 @@ RSpec.describe Penthouse do
 
   describe ".with_tenant" do
     context "when an exception occurs" do
-      subject { penthouse.with_tenant("test") { raise RuntimeError } }
+      subject { penthouse.with_tenant(tenant_identifier: "test") { raise RuntimeError } }
 
       it "should still switch back to the original tenant after" do
         expect { subject }.to raise_error(RuntimeError)

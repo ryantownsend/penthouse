@@ -29,21 +29,21 @@ module Penthouse
       # creates the tenant schema within the master shard
       # @see Penthouse::Tenants::SchemaTenant#create
       # @return [void]
-      def create(*)
+      def create(**)
         call { super }
       end
 
       # drops the tenant schema within the master shard
       # @see Penthouse::Tenants::SchemaTenant#delete
       # @return [void]
-      def delete(*)
+      def delete(**)
         call { super }
       end
 
       # returns whether or not the schema exists
       # @see Penthouse::Tenants::SchemaTenant#exists?
       # @return [Boolean] whether or not the schema exists in the master shard
-      def exists?(*)
+      def exists?(**)
         call { super }
       end
     end
