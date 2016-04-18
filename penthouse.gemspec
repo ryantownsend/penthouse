@@ -29,10 +29,11 @@ Gem::Specification.new do |spec|
   # web
   spec.add_development_dependency 'rack', '~> 1.6.4'
   # db
-  spec.add_development_dependency 'ar-octopus', '~> 0.8.6'
-  spec.add_development_dependency 'activesupport', '~> 4.2.6'
-  spec.add_development_dependency 'activerecord', '~> 4.2.6'
-  spec.add_development_dependency 'pg'
+  spec.add_dependency 'ar-octopus', '~> 0.8.6'
+  spec.add_dependency 'activesupport', '~> 4.2.6'
+  spec.add_dependency 'activerecord', '~> 4.2.6'
+  spec.add_dependency 'pg'
+  
   spec.add_development_dependency 'guard-rspec'
   spec.add_development_dependency 'pry'
 end
