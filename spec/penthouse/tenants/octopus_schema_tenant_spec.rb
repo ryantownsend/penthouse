@@ -9,31 +9,32 @@ RSpec.describe Penthouse::Tenants::OctopusSchemaTenant do
   let(:default_schema) { "public" }
   let(:db_schema_file) { File.join(File.dirname(__FILE__), '../../support/schema.rb') }
 
-  subject do
-    described_class.new(schema_name,
+  subject(:octopus_schema_tenant) {
+    described_class.new(
+      identifier: schema_name,
       tenant_schema: schema_name,
       persistent_schemas: persistent_schemas,
       default_schema: default_schema
     )
-  end
+  }
 
   describe "#create" do
     after(:each) do
-      subject.delete
+      octopus_schema_tenant.delete
       expect(subject.exists?).to be false
     end
 
     context "without running migrations" do
       it "should create the relevant Postgres schema" do
-        subject.create(run_migrations: false, db_schema_file: nil)
+        octopus_schema_tenant.create(run_migrations: false, db_schema_file: nil)
         expect(subject.exists?).to be true
       end
     end
 
     context "when running migrations" do
       it "should create the relevant Postgres schema and tables" do
-        subject.create(run_migrations: true, db_schema_file: db_schema_file)
-        subject.call do |tenant|
+        octopus_schema_tenant.create(run_migrations: true, db_schema_file: db_schema_file)
+        octopus_schema_tenant.call do |tenant|
           expect(Post.create(title: "test", description: "test")).to be_persisted
           expect(Post.count).to eq(1)
         end

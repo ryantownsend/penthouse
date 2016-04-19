@@ -18,9 +18,9 @@ module Penthouse
       # @param identifier [String, Symbol] An identifier for the tenant
       # @param shard [String, Symbol] the configured Octopus shard to use for this tenant
       # @param tenant_schema [String] your tenant's schema name within the Postgres shard, typically just 'public' as the shard should be dedicated
-      def initialize(identifier, shard:, tenant_schema: "public", **options)
+      def initialize(identifier:, shard:, tenant_schema: "public", **options)
         self.shard = shard
-        super(identifier, tenant_schema: tenant_schema, **options)
+        super(identifier: identifier, tenant_schema: tenant_schema, **options)
       end
 
       # switches to the relevant Octopus shard, and processes the block

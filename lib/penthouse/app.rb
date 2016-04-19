@@ -30,7 +30,7 @@ module Penthouse
     # @return [void]
     def call(env)
       request = Rack::Request.new(env)
-      runner.call(router.call(request)) do
+      runner.call(tenant_identifier: router.call(request)) do
         app.call(env)
       end
     end

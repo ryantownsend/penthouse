@@ -2,6 +2,9 @@ require 'spec_helper'
 require 'penthouse/tenants/base_tenant'
 
 RSpec.describe Penthouse do
+
+  subject(:penthouse) { described_class }
+
   TestTenant = Class.new(Penthouse::Tenants::BaseTenant) do
     def call(&block)
       block.yield(self)
@@ -9,48 +12,50 @@ RSpec.describe Penthouse do
   end
 
   TestRunner = Class.new(Penthouse::Runners::BaseRunner) do
-    def self.load_tenant(tenant_identifier)
-      TestTenant.new(tenant_identifier)
+    def load_tenant(tenant_identifier:, **args)
+      TestTenant.new(identifier: tenant_identifier)
     end
   end
 
-  let!(:original_tenant) { described_class.tenant }
+  let(:runner) { TestRunner.new }
+
+  let!(:original_tenant) { penthouse.tenant }
 
   describe ".tenant=" do
     it "should set the tenant on the current thread" do
-      described_class.tenant = "main_thread"
-      expect(described_class.tenant).to eq("main_thread")
+      penthouse.tenant = "main_thread"
+      expect(penthouse.tenant).to eq("main_thread")
       (1..3).to_a.map do |i|
         Thread.new do
-          described_class.tenant = "thread_#{i}"
-          expect(described_class.tenant).to eq("thread_#{i}")
+          penthouse.tenant = "thread_#{i}"
+          expect(penthouse.tenant).to eq("thread_#{i}")
         end
       end.each(&:join)
-      expect(described_class.tenant).to eq("main_thread")
+      expect(penthouse.tenant).to eq("main_thread")
     end
   end
 
   describe ".with_tenant" do
     context "when an exception occurs" do
-      subject { described_class.with_tenant("test") { raise RuntimeError } }
+      subject { penthouse.with_tenant(tenant_identifier: "test") { raise RuntimeError } }
 
       it "should still switch back to the original tenant after" do
         expect { subject }.to raise_error(RuntimeError)
-        expect(described_class.tenant).to_not eq("test")
-        expect(described_class.tenant).to eq(original_tenant)
+        expect(penthouse.tenant).to_not eq("test")
+        expect(penthouse.tenant).to eq(original_tenant)
       end
     end
   end
 
   describe ".each_tenant" do
-    subject { described_class.dup }
+    subject(:penthouse) { described_class.dup }
 
-    it "should use the proc defined by the configuration" do
-      subject.configure do |config|
+    fit "should use the proc defined by the configuration" do
+      penthouse.configure do |config|
         config.tenants = Proc.new { { one: "one", two: "two", three: "three" } }
       end
       @tenants = []
-      subject.each_tenant(runner: TestRunner) do |tenant|
+      penthouse.each_tenant(runner: runner) do |tenant|
         @tenants.push(tenant.identifier)
       end
       expect(@tenants).to eq(%i(one two three))
@@ -61,7 +66,7 @@ RSpec.describe Penthouse do
     let(:router_class) { Class.new(Penthouse::Routers::BaseRouter) }
     let(:runner_class) { Class.new(Penthouse::Runners::BaseRunner) }
 
-    subject { described_class.dup }
+    subject { penthouse.dup }
 
     it "should set the configuration" do
       subject.configure do |config|
@@ -80,16 +85,29 @@ RSpec.describe Penthouse do
 
   describe ".switch" do
     it "should set the configuration" do
-      described_class.switch("test", runner: TestRunner) do |tenant|
-        expect(described_class.tenant).to eq("test")
+      penthouse.switch(tenant_identifier: "test", runner: runner) do |tenant|
+        expect(penthouse.tenant).to eq("test")
         expect(tenant.identifier).to eq("test")
       end
-      expect(described_class.tenant).to eq(original_tenant)
+      expect(penthouse.tenant).to eq(original_tenant)
     end
+    
+    it 'should honour nested switches' do
+      penthouse.switch(tenant_identifier: "outer_test", runner: runner) do |tenant|
+        penthouse.switch(tenant_identifier: "inner_test", runner: runner) do |tenant|
+          expect(penthouse.tenant).to eq("inner_test")
+          expect(tenant.identifier).to eq("inner_test")
+        end
+        expect(penthouse.tenant).to eq("outer_test")
+        expect(tenant.identifier).to eq("outer_test")
+      end
+      expect(penthouse.tenant).to eq(original_tenant)
+    end
+    
   end
 
   context "when tenants are configured" do
-    subject { described_class.dup }
+    subject { penthouse.dup }
 
     before(:each) do
       subject.configure do |config|
@@ -111,7 +129,7 @@ RSpec.describe Penthouse do
   end
 
   context "when tenants are not configured" do
-    subject { described_class.dup }
+    subject { penthouse.dup }
 
     describe ".tenant_identifiers" do
       it "should raise a NotImplementedError" do
