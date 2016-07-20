@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['ryan@ryantownsend.co.uk']
 
   spec.summary       = %q{Multi-tenancy framework. Out of the box, supports Postgres schemas and per-tenant databases}
-  spec.homepage      = 'https://github.com/ryantownsend/penthouse'
+  spec.homepage      = 'https://github.com/shiftcommerce/penthouse'
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.bindir        = 'exe'
