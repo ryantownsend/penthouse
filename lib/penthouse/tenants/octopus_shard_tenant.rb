@@ -11,6 +11,7 @@ require_relative './octopus_schema_tenant'
 module Penthouse
   module Tenants
     class OctopusShardTenant < OctopusSchemaTenant
+      DEFAULT_TENANT_SCHEMA = 'public'.freeze
 
       attr_accessor :shard
       private :shard=
@@ -18,7 +19,7 @@ module Penthouse
       # @param identifier [String, Symbol] An identifier for the tenant
       # @param shard [String, Symbol] the configured Octopus shard to use for this tenant
       # @param tenant_schema [String] your tenant's schema name within the Postgres shard, typically just 'public' as the shard should be dedicated
-      def initialize(identifier:, shard:, tenant_schema: "public", **options)
+      def initialize(identifier:, shard:, tenant_schema: DEFAULT_TENANT_SCHEMA, **options)
         self.shard = shard
         super(identifier: identifier, tenant_schema: tenant_schema, **options)
       end

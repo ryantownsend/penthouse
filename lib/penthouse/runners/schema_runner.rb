@@ -11,8 +11,8 @@ module Penthouse
 
       # @param tenant_identifier [String, Symbol] The identifier for the tenant
       # @return [Penthouse::Tenants::BaseTenant] An instance of a tenant
-      def load_tenant(tenant_identifier:, previous_tenant_identifier: 'public')
-        Tenants::SchemaTenant.new(identifier: tenant_identifier, tenant_schema: tenant_identifier, previous_schema: previous_tenant_identifier)
+      def load_tenant(tenant_identifier:)
+        Tenants::SchemaTenant.new(identifier: tenant_identifier, tenant_schema: tenant_identifier)
       end
 
     end
