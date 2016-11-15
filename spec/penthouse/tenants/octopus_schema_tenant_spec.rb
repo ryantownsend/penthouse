@@ -6,15 +6,13 @@ require_relative '../../support/models'
 RSpec.describe Penthouse::Tenants::OctopusSchemaTenant do
   let(:schema_name) { "octopus_schema_tenant_test" }
   let(:persistent_schemas) { ["shared_extensions"] }
-  let(:default_schema) { "public" }
   let(:db_schema_file) { File.join(File.dirname(__FILE__), '../../support/schema.rb') }
 
   subject(:octopus_schema_tenant) {
     described_class.new(
       identifier: schema_name,
       tenant_schema: schema_name,
-      persistent_schemas: persistent_schemas,
-      default_schema: default_schema
+      persistent_schemas: persistent_schemas
     )
   }
 

@@ -23,7 +23,7 @@ RSpec.describe Penthouse::Configuration do
       it 'should raise an ArgumentError' do
         expect do
           described_class.new(migrate_tenants: true, db_schema_file: File.join(File.dirname(__FILE__), "../support/schema.rb"))
-        end.to_not raise_error(ArgumentError)
+        end.to_not raise_error
       end
     end
   end
