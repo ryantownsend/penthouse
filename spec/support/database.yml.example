@@ -3,8 +3,8 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: 10
-  port: 5432
-  username:
+  port: 9876
+  username: YOUR_USERNAME_HERE
   password:
 
 test:

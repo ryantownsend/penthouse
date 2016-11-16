@@ -79,4 +79,8 @@ require 'penthouse/sidekiq'
 
 ## Contributing
 
+To run the test suite via the `rspec` command, you'll need PostgreSQL booted, there is a `Procfile` included in the repo, so you can boot this with foreman using `bundle exec foreman start`.
+
+You'll need to configure `spec/support/database.yml` to match your PostgreSQL configuration for authentication etc, there is a sample included in `spec/support/database.yml.example`.
+
 Bug reports and pull requests are welcome on GitHub at https://github.com/ryantownsend/penthouse.
