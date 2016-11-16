@@ -20,7 +20,7 @@ module Penthouse
       prefix = []
       prefix << "DB #{penthouse_db}" if penthouse_db
       prefix << "tenant #{penthouse_tenant}" if penthouse_tenant
-      conn = prefix ? color("[#{prefix.join(', ')}]", ActiveSupport::LogSubscriber::GREEN, true) : ''
+      conn = prefix.present? ? color("[#{prefix.join(', ')}]", ActiveSupport::LogSubscriber::GREEN, true) : ''
       debug_without_penthouse_shard(conn + msg)
     end
   end
