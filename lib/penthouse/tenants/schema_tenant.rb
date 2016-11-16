@@ -14,6 +14,8 @@ module Penthouse
     class SchemaTenant < BaseTenant
       include Migratable
 
+      attr_reader :tenant_schema
+
       # @param identifier [String, Symbol] An identifier for the tenant
       # @param tenant_schema [String] your tenant's schema name in Postgres
       def initialize(identifier:, tenant_schema:)
