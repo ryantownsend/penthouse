@@ -1,3 +1,6 @@
+# Note: we cannot monkey-patch via an extend here as we need to alter the
+# underlying method to ensure all subclasses inherit the change
+
 class ActiveRecord::Base
   DEFAULT_SCHEMA_NAME = 'public'.freeze
 
