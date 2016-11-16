@@ -128,6 +128,10 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   alias_method :original_index_name, :index_name
 
   def index_name(*args)
-    original_index_name(*args).gsub(/\./, '_')
+    if Penthouse.current_schema
+      original_index_name(*args).gsub(/#{Penthouse.current_schema}\./, '')
+    else
+      original_index_name(*args)
+    end
   end
 end
