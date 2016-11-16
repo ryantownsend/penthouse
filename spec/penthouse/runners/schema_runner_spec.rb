@@ -14,23 +14,27 @@ RSpec.describe Penthouse::Runners::SchemaRunner do
   describe ".call" do
     it "should switch to the relevant Postgres schema" do
       runner.call(tenant_identifier: schema_name) do
-        expect(ActiveRecord::Base.connection.schema_search_path).to include(schema_name)
+        expect(Penthouse.current_schema).to eq(schema_name)
       end
     end
-    
+
     it "should honour nested switches to the relevant Postgres schema" do
       schema_1 = 'schema_1'
       schema_2 = 'schema_2'
+
       runner.call(tenant_identifier: schema_1) do
+        # we should move to the top-level schema
+        expect(Penthouse.current_schema).to eq(schema_1)
+
         runner.call(tenant_identifier: schema_2) do
-          expect(ActiveRecord::Base.connection.schema_search_path).not_to include(schema_1)
-          expect(ActiveRecord::Base.connection.schema_search_path).to include(schema_2)
+          # we should move to the nested schema
+          expect(Penthouse.current_schema).to eq(schema_2)
         end
-        expect(ActiveRecord::Base.connection.schema_search_path).not_to include('public')
-        expect(ActiveRecord::Base.connection.schema_search_path).to include(schema_1)
-        expect(ActiveRecord::Base.connection.schema_search_path).not_to include(schema_2)
+
+        # we should return to the top-level schema
+        expect(Penthouse.current_schema).to eq(schema_1)
       end
     end
-    
+
   end
 end
