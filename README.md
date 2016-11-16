@@ -1,4 +1,4 @@
-[![Codeship Status](https://codeship.com/projects/c6513ab0-cc05-0133-94c6-0666c337ff82/status?branch=master)](https://codeship.com/projects/140114) [![Code Climate](https://codeclimate.com/github/ryantownsend/penthouse/badges/gpa.svg)](https://codeclimate.com/github/ryantownsend/penthouse) [![RubyDocs](https://img.shields.io/badge/rubydocs-click_here-blue.svg)](http://www.rubydoc.info/github/ryantownsend/penthouse)
+[![Codeship Status](https://codeship.com/projects/03e16b10-8e69-0134-64e5-76ac8288ef19/status?branch=master)](https://app.codeship.com/projects/185256) [![Code Climate](https://codeclimate.com/github/shiftcommerce/penthouse/badges/gpa.svg)](https://codeclimate.com/github/shiftcommerce/penthouse) [![RubyDocs](https://img.shields.io/badge/rubydocs-click_here-blue.svg)](http://www.rubydoc.info/github/shiftcommerce/penthouse)
 
 Penthouse is an alternative to the excellent [Apartment gem](https://github.com/influitive/apartment) – however Penthouse is more of a framework for multi-tenancy than a library, in that it provides less out-of-the-box functionality, but should make for easier customisation.
 
@@ -78,5 +78,9 @@ require 'penthouse/sidekiq'
 * **Runner** – this class receives the identifier (either from the router or manually switching), then looks up the tenant instance and runs the code within it.
 
 ## Contributing
+
+To run the test suite via the `rspec` command, you'll need PostgreSQL booted, there is a `Procfile` included in the repo, so you can boot this with foreman using `bundle exec foreman start`.
+
+You'll need to configure `spec/support/database.yml` to match your PostgreSQL configuration for authentication etc, there is a sample included in `spec/support/database.yml.example`.
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/ryantownsend/penthouse.

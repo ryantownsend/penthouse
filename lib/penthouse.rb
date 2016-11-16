@@ -1,12 +1,15 @@
 require "penthouse/migrator"
 require "penthouse/version"
 require "penthouse/configuration"
+require "penthouse/active_record"
 require "penthouse/routers/base_router"
 require "penthouse/runners/base_runner"
 
 module Penthouse
   class TenantNotFound < RuntimeError; end
+
   CURRENT_TENANT_KEY = 'penthouse_tenant'.freeze
+  SCHEMA_CHAIN_KEY = 'penthouse_schema_chain'.freeze
 
   class << self
     # Retrieves the currently active tenant identifier
@@ -20,6 +23,18 @@ module Penthouse
     # @return [void]
     def tenant=(tenant_identifier)
       Thread.current[CURRENT_TENANT_KEY] = tenant_identifier
+    end
+
+    # Retrieves the schemas with nesting
+    # @return [Array<String, Symbol>] the list of schemas, the last being the currently active
+    def schema_chain
+      Thread.current[SCHEMA_CHAIN_KEY] ||= []
+    end
+
+    # Retrieves the currently active tenant schema
+    # @return [String, Symbol] the current tenant name
+    def current_schema
+      schema_chain.last
     end
 
     # Similar to Penthouse.tenant=, except this will switch back after the given

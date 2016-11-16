@@ -122,3 +122,16 @@ end
 
 ActiveRecord::Migration.send(:include, Penthouse::Migration)
 ActiveRecord::Migrator.send(:include, Penthouse::Migrator)
+
+# monkey-patch to remove periods from index names
+module ActiveRecord::ConnectionAdapters::SchemaStatements
+  alias_method :original_index_name, :index_name
+
+  def index_name(*args)
+    if Penthouse.current_schema
+      original_index_name(*args).gsub(/#{Penthouse.current_schema}\./, '')
+    else
+      original_index_name(*args)
+    end
+  end
+end
