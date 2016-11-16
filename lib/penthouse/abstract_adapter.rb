@@ -12,11 +12,8 @@ module Penthouse
         end
 
         def instrument(name, payload = {}, &block)
-          # p "lol"
-          # raise "WAT"
-          # binding.pry
-          payload[:octopus_shard] ||= @adapter.octopus_shard
-          payload[:penthouse_prefix] = "[Tenant #{::Penthouse.tenant.inspect} on shard #{::ActiveRecord::Base.current_shard_id.inspect}]"
+          payload[:penthouse_db] ||= @adapter.active_record_database
+          payload[:penthouse_tenant] ||= ::Penthouse.tenant
           @instrumenter.instrument(name, payload, &block)
         end
 
@@ -25,8 +22,8 @@ module Penthouse
         end
       end
 
-      def octopus_shard
-        @config[:octopus_shard]
+      def active_record_database
+        @config[:database]
       end
 
       def initialize(*args)
