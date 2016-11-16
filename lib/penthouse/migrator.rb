@@ -120,5 +120,5 @@ module Penthouse
   end
 end
 
-ActiveRecord::Migration.send(:include, Penthouse::Migration)
+ActiveRecord::Migration.send(:prepend, Penthouse::Migration)
 ActiveRecord::Migrator.send(:include, Penthouse::Migrator)
