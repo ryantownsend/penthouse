@@ -3,7 +3,7 @@ require 'active_record_shards_helper'
 require 'penthouse/tenants/active_record_shards_tenant'
 require_relative '../../support/models'
 
-RSpec.describe Penthouse::Tenants::ActiveRecordShardsTenant do
+RSpec.describe Penthouse::Tenants::ActiveRecordShardsTenant, sharder: :active_record_shards do
   SHARDS = [nil, "one"]
   SCHEMAS = ["public", "ar_schema_tenant_test"]
 

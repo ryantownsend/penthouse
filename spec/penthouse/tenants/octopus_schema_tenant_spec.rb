@@ -3,7 +3,7 @@ require 'octopus_helper'
 require 'penthouse/tenants/octopus_schema_tenant'
 require_relative '../../support/models'
 
-RSpec.describe Penthouse::Tenants::OctopusSchemaTenant do
+RSpec.describe Penthouse::Tenants::OctopusSchemaTenant, sharder: :octopus do
   let(:schema_name) { "octopus_schema_tenant_test" }
   let(:persistent_schemas) { ["shared_extensions"] }
   let(:default_schema) { "public" }
