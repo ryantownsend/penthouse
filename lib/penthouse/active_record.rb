@@ -5,11 +5,24 @@ class ActiveRecord::Base
   DEFAULT_SCHEMA_NAME = 'public'.freeze
 
   class << self
-    alias_method :original_table_name, :table_name
-
-    # override table name so it's calculated EVERY time
+    # override table name so it's calculated per prefix
     def table_name
-      table_name_prefix + original_table_name.gsub(/^.*\./, '')
+      @table_name_cache ||= {}
+      # break early if this table name is already in the cache
+      if @table_name_cache.key?(table_name_prefix)
+        return @table_name_cache[table_name_prefix]
+      end
+
+      # generate the table name
+      table_name = compute_table_name
+      self.table_name = @table_name_cache[table_name_prefix] = if table_name
+        "#{table_name_prefix}#{table_name.gsub(/^.*\./, '')}"
+      else
+        nil
+      end
+
+      # return the table name
+      @table_name
     end
 
     # set a table name prefix which is dynamic based on the current schema
