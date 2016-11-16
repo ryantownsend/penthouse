@@ -14,6 +14,10 @@ module Penthouse
     def current_tenant
       "Tenant: #{Penthouse.tenant || '*** global ***'}"
     end
+
+    def migrate_with_forced_shard(direction)
+      migrate_without_forced_shard(direction)
+    end
   end
 end
 
