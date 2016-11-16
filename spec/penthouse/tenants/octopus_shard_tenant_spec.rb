@@ -9,9 +9,27 @@ RSpec.describe Penthouse::Tenants::OctopusShardTenant do
     context "with a valid shard" do
       let(:shard_name) { "one" }
 
-      it "should switch to the relevant shard" do
+      it 'should switch to the correct shard' do
+        # we should be on the master shard
+        expect(ActiveRecord::Base.connection_proxy.current_shard).to eq(Octopus.master_shard)
+
         subject.call do
-          expect(ActiveRecord::Base.connection.schema_search_path).to include("public")
+          # we should be on the tenant shard
+          expect(ActiveRecord::Base.connection_proxy.current_shard).to eq(shard_name)
+        end
+
+        # we should be back on the master shard
+        expect(ActiveRecord::Base.connection_proxy.current_shard).to eq(Octopus.master_shard)
+      end
+
+      it "should switch to the public schema" do
+        subject.call do
+          aggregate_failures do
+            # our current schema should be the public schema
+            expect(Penthouse.current_schema).to eq('public')
+            # our table prefix should use the public schema
+            expect(ActiveRecord::Base.table_name_prefix).to eq('public.')
+          end
         end
       end
     end
