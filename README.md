@@ -1,4 +1,4 @@
-[![Codeship Status](https://codeship.com/projects/c6513ab0-cc05-0133-94c6-0666c337ff82/status?branch=master)](https://codeship.com/projects/140114) [![Code Climate](https://codeclimate.com/github/ryantownsend/penthouse/badges/gpa.svg)](https://codeclimate.com/github/ryantownsend/penthouse) [![RubyDocs](https://img.shields.io/badge/rubydocs-click_here-blue.svg)](http://www.rubydoc.info/github/ryantownsend/penthouse)
+[![Codeship Status](https://codeship.com/projects/03e16b10-8e69-0134-64e5-76ac8288ef19/status?branch=master)](https://app.codeship.com/projects/185256) [![Code Climate](https://codeclimate.com/github/shiftcommerce/penthouse/badges/gpa.svg)](https://codeclimate.com/github/shiftcommerce/penthouse) [![RubyDocs](https://img.shields.io/badge/rubydocs-click_here-blue.svg)](http://www.rubydoc.info/github/shiftcommerce/penthouse)
 
 Penthouse is an alternative to the excellent [Apartment gem](https://github.com/influitive/apartment) – however Penthouse is more of a framework for multi-tenancy than a library, in that it provides less out-of-the-box functionality, but should make for easier customisation.
 
