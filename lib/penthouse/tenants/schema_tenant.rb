@@ -40,10 +40,12 @@ module Penthouse
         begin
           # set the search path to include the tenant
           ActiveRecord::Base.connection.schema_search_path = persistent_schemas.dup.unshift(tenant_schema).join(", ")
+          ActiveRecord::Base.connection.clear_query_cache
           block.yield(self)
         ensure
           # reset the search path back to the default
           ActiveRecord::Base.connection.schema_search_path = persistent_schemas.dup.unshift(previous_schema).join(", ")
+          ActiveRecord::Base.connection.clear_query_cache
         end
       end
 

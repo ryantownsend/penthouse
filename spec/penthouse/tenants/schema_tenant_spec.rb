@@ -25,5 +25,16 @@ RSpec.describe Penthouse::Tenants::SchemaTenant do
       end
       expect(ActiveRecord::Base.connection.schema_search_path).to eq([default_schema, *persistent_schemas].join(", "))
     end
+
+    it "should clear query cache before and after yielding to block" do
+      relation = double("Relation")
+      expect(ActiveRecord::Base.connection).to receive(:clear_query_cache).ordered
+      expect(relation).to receive(:some_method).ordered
+      expect(ActiveRecord::Base.connection).to receive(:clear_query_cache).ordered
+
+      schema_tenant.call do
+        relation.some_method
+      end
+    end
   end
 end
