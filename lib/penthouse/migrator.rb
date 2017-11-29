@@ -5,6 +5,10 @@ module Penthouse
   module Migration
     def self.included(base)
       base.class_eval do
+        # Verbose form of alias_method_chain which is now deprecated in ActiveSupport.
+        #
+        # This replaces the original #annouce method with #announce_with_penthouse
+        # but allows calling #annouce by using #announce_without_penthouse.
         alias_method :announce_without_penthouse, :announce
         alias_method :announce, :announce_with_penthouse
       end
