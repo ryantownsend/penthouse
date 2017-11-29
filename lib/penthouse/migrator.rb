@@ -4,7 +4,14 @@ require 'active_support/core_ext/module/aliasing'
 module Penthouse
   module Migration
     def self.included(base)
-      base.alias_method_chain :announce, :penthouse
+      base.class_eval do
+        # Verbose form of alias_method_chain which is now deprecated in ActiveSupport.
+        #
+        # This replaces the original #annouce method with #announce_with_penthouse
+        # but allows calling #annouce by using #announce_without_penthouse.
+        alias_method :announce_without_penthouse, :announce
+        alias_method :announce, :announce_with_penthouse
+      end
     end
 
     def announce_with_penthouse(message)
@@ -24,10 +31,17 @@ module Penthouse
 
       base.class_eval do
         class << self
-          alias_method_chain :migrate, :penthouse
-          alias_method_chain :up,      :penthouse
-          alias_method_chain :down,    :penthouse
-          alias_method_chain :run,     :penthouse
+          alias_method :migrate_without_penthouse, :migrate
+          alias_method :migrate, :migrate_with_penthouse
+
+          alias_method :up_without_penthouse, :up
+          alias_method :up, :up_with_penthouse
+
+          alias_method :down_without_penthouse, :down
+          alias_method :down, :down_with_penthouse
+
+          alias_method :run_without_penthouse, :run
+          alias_method :run, :run_with_penthouse
 
           # override any new Octopus methods with the new Penthouse ones
           alias_method :migrate_with_octopus, :migrate_with_penthouse
@@ -36,8 +50,11 @@ module Penthouse
           alias_method :run_with_octopus,     :run_with_penthouse
         end
 
-        alias_method_chain :migrate,    :penthouse
-        alias_method_chain :migrations, :penthouse
+        alias_method :migrate_without_penthouse, :migrate
+        alias_method :migrate, :migrate_with_penthouse
+
+        alias_method :migrations_without_penthouse, :migrations
+        alias_method :migrations, :migrations_with_penthouse
 
         # override any new Octopus methods with the new Penthouse ones
         alias_method :migrate_with_octopus,    :migrate_with_penthouse
