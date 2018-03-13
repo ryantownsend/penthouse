@@ -7,7 +7,8 @@ RSpec.describe Penthouse::Tenants::OctopusSchemaTenant do
   let(:schema_name) { "octopus_schema_tenant_test" }
   let(:persistent_schemas) { ["shared_extensions"] }
   let(:default_schema) { "public" }
-  let(:db_schema_file) { File.join(File.dirname(__FILE__), '../../support/schema.rb') }
+  let(:db_schema_file) { Pathname.new(File.join(File.dirname(__FILE__), '../../support/schema.rb')) }
+  let(:db_structure_file) { Pathname.new(File.join(File.dirname(__FILE__), '../../support/structure.sql')) }
 
   subject(:octopus_schema_tenant) {
     described_class.new(
@@ -32,8 +33,16 @@ RSpec.describe Penthouse::Tenants::OctopusSchemaTenant do
     end
 
     context "when running migrations" do
-      it "should create the relevant Postgres schema and tables" do
+      it "should create the relevant Postgres schema and tables for ActiveRecord schema" do
         octopus_schema_tenant.create(run_migrations: true, db_schema_file: db_schema_file)
+        octopus_schema_tenant.call do |tenant|
+          expect(Post.create(title: "test", description: "test")).to be_persisted
+          expect(Post.count).to eq(1)
+        end
+      end
+
+      it "should create the relevant Postgres schema and tables for SQL schema" do
+        octopus_schema_tenant.create(run_migrations: true, db_schema_file: db_structure_file)
         octopus_schema_tenant.call do |tenant|
           expect(Post.create(title: "test", description: "test")).to be_persisted
           expect(Post.count).to eq(1)
