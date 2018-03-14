@@ -68,8 +68,10 @@ module Penthouse
 
       def sanitize_sql(sql)
         sql
+          .gsub(/SELECT pg_catalog.set_config\(\'search_path.*;/, '')
           .gsub(/SET search_path.*;/, '')
           .gsub(/CREATE SCHEMA/, 'CREATE SCHEMA IF NOT EXISTS')
+          .gsub(/public\./, '')
       end
     end
   end
