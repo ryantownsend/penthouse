@@ -1,6 +1,7 @@
+SELECT pg_catalog.set_config('search_path', '', false);
 SET search_path = this_should_get_replaced;
 
-CREATE TABLE posts (
+CREATE TABLE public.posts (
     id integer NOT NULL,
     title character varying NOT NULL,
     description character varying NOT NULL,
