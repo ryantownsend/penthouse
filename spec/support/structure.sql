@@ -1,3 +1,5 @@
+SET search_path = this_should_get_replaced;
+
 CREATE TABLE posts (
     id integer NOT NULL,
     title character varying NOT NULL,
