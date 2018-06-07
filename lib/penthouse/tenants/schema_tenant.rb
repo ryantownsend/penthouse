@@ -42,6 +42,12 @@ module Penthouse
           ActiveRecord::Base.connection.schema_search_path = persistent_schemas.dup.unshift(tenant_schema).join(", ")
           ActiveRecord::Base.connection.clear_query_cache
           block.yield(self)
+        rescue PG::UndefinedTable => ex
+          puts "PG::UndefinedTable Error"
+          puts "Tenant Identifier: #{identifier}"
+          puts "Search Path: #{ActiveRecord::Base.connection.schema_search_path}"
+          puts "Connection Inspect: #{ActiveRecord::Base.connection.inspect}"
+          raise ex
         ensure
           # reset the search path back to the default
           ActiveRecord::Base.connection.schema_search_path = persistent_schemas.dup.unshift(previous_schema).join(", ")
