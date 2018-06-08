@@ -49,7 +49,7 @@ module Penthouse
 
       def switch_shard(shard: Octopus.master_shard, &block)
         Octopus.using(shard) do
-          super(&block)
+          block.call
         end
       end
     end
