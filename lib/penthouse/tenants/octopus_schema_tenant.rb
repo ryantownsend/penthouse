@@ -28,26 +28,26 @@ module Penthouse
       # @see Penthouse::Tenants::SchemaTenant#create
       # @return [void]
       def create(**)
-        switch_shard { super }
+        switch_shard(shard: Octopus.master_shard) { super }
       end
 
       # drops the tenant schema within the master shard
       # @see Penthouse::Tenants::SchemaTenant#delete
       # @return [void]
       def delete(**)
-        switch_shard { super }
+        switch_shard(shard: Octopus.master_shard) { super }
       end
 
       # returns whether or not the schema exists
       # @see Penthouse::Tenants::SchemaTenant#exists?
       # @return [Boolean] whether or not the schema exists in the master shard
       def exists?(**)
-        switch_shard { super }
+        switch_shard(shard: Octopus.master_shard) { super }
       end
 
       private
 
-      def switch_shard(shard: Octopus.master_shard, &block)
+      def switch_shard(shard:, &block)
         Octopus.using(shard) do
           block.call
         end
