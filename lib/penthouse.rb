@@ -3,6 +3,8 @@ require "penthouse/version"
 require "penthouse/configuration"
 require "penthouse/routers/base_router"
 require "penthouse/runners/base_runner"
+require "penthouse/log_subscriber"
+require "penthouse/abstract_adapter"
 
 module Penthouse
   class TenantNotFound < RuntimeError; end

@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'octopus_helper'
 require 'penthouse/tenants/octopus_shard_tenant'
 
-RSpec.describe Penthouse::Tenants::OctopusShardTenant do
+RSpec.describe Penthouse::Tenants::OctopusShardTenant, sharder: :octopus do
   subject { described_class.new(identifier: shard_name, shard: shard_name) }
 
   describe "#call" do

@@ -1,0 +1,21 @@
+default: &default
+  host: localhost
+  adapter: postgresql
+  encoding: unicode
+  pool: 10
+  port: 5432
+  username:
+  password:
+
+test:
+  <<: *default
+  database: penthouse_test
+
+  shards:
+    one:
+      <<: *default
+      database: penthouse_shard_one
+
+    two:
+      <<: *default
+      database: penthouse_shard_two

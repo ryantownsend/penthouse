@@ -7,6 +7,7 @@
 /doc/
 /pkg/
 /spec/reports/
+/spec/support/active_record_shards.yml
 /spec/support/database.yml
 /spec/support/octopus.yml
 /tmp/
