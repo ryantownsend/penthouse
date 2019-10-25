@@ -3,6 +3,7 @@ SimpleCov.start do
   add_filter "/spec/"
 end
 
-require 'rspec'
+require 'bundler/setup'
+Bundler.setup
+
 require 'penthouse'
-require 'pry'

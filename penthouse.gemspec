@@ -17,23 +17,24 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'bundler', '~> 1.11'
+  spec.add_dependency 'bundler', '>= 1.11'
 
-  spec.add_development_dependency 'bundler', '~> 1.11'
+  spec.add_development_dependency 'bundler', '>= 1.11'
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'yard', '~> 0.8.7.6'
   # testing
   spec.add_development_dependency 'rspec', '~> 3.4.0'
   spec.add_development_dependency 'simplecov', '~> 0.11.2'
   spec.add_development_dependency 'rubocop', '~> 0.38'
+  spec.add_development_dependency 'standardrb'
   # web
   spec.add_development_dependency 'rack', '~> 1.6.4'
   # db
   spec.add_development_dependency 'ar-octopus', '~> 0.8.6'
-  spec.add_development_dependency 'activesupport', '~> 4.2.6'
-  spec.add_development_dependency 'activerecord', '~> 4.2.6'
-  spec.add_development_dependency 'pg'
-  
+  spec.add_development_dependency 'activesupport', "~> #{ENV.fetch('RAILS_VERSION', '4.2.2')}"
+  spec.add_development_dependency 'activerecord', "~> #{ENV.fetch('RAILS_VERSION', '4.2.2')}"
+  spec.add_development_dependency 'pg', "~> #{ENV.fetch('PG_VERSION', '0.19.0')}"
+
   spec.add_development_dependency 'guard-rspec'
   spec.add_development_dependency 'pry'
 end
