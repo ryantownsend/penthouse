@@ -1,9 +1,9 @@
-require 'simplecov'
+require "simplecov"
 SimpleCov.start do
   add_filter "/spec/"
 end
 
-require 'bundler/setup'
+require "bundler/setup"
 Bundler.setup
 
-require 'penthouse'
+require "penthouse"

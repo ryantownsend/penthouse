@@ -10,7 +10,6 @@
 module Penthouse
   module Tenants
     module Migratable
-
       # @param db_schema_file [String] a path to the DB schema file to load, defaults to Penthouse.configuration.db_schema_file
       # @return [void]
       def migrate(db_schema_file: Penthouse.configuration.db_schema_file)
@@ -28,9 +27,9 @@ module Penthouse
 
       def read_schema(db_schema_file)
         case db_schema_file.extname
-        when '.rb'
+        when ".rb"
           load_ruby_schema(db_schema_file)
-        when '.sql'
+        when ".sql"
           load_sql_schema(db_schema_file)
         else
           raise ArgumentError, "Unrecognized schema file extension"
@@ -68,10 +67,10 @@ module Penthouse
 
       def sanitize_sql(sql)
         sql
-          .gsub(/SELECT pg_catalog.set_config\(\'search_path.*;/, '')
-          .gsub(/SET search_path.*;/, '')
-          .gsub(/CREATE SCHEMA/, 'CREATE SCHEMA IF NOT EXISTS')
-          .gsub(/public\./, '')
+          .gsub(/SELECT pg_catalog.set_config\(\'search_path.*;/, "")
+          .gsub(/SET search_path.*;/, "")
+          .gsub(/CREATE SCHEMA/, "CREATE SCHEMA IF NOT EXISTS")
+          .gsub(/public\./, "")
       end
     end
   end

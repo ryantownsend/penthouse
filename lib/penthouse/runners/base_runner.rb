@@ -10,7 +10,6 @@
 module Penthouse
   module Runners
     class BaseRunner
-
       PENTHOUSE_RUNNER_CALL_STACK = :current_penthouse_runner_call_stack
 
       # @param tenant_identifier [String, Symbol] The identifier for the tenant
@@ -18,7 +17,7 @@ module Penthouse
       # @return [void]
       # @raise [Penthouse::TenantNotFound] if the tenant cannot be switched to
       def call(tenant_identifier:, &block)
-        previous_tenant_identifier = call_stack.last || 'public'
+        previous_tenant_identifier = call_stack.last || "public"
         call_stack.push(tenant_identifier)
 
         result = nil
@@ -39,16 +38,15 @@ module Penthouse
       # @param tenant_identifier [String, Symbol] The identifier for the tenant
       # @return [Penthouse::Tenants::BaseTenant] An instance of a tenant
       # @raise [Penthouse::TenantNotFound] if the tenant cannot be switched to
-      def load_tenant(tenant_identifier:, previous_tenant_identifier: 'public')
+      def load_tenant(tenant_identifier:, previous_tenant_identifier: "public")
         raise NotImplementedError
       end
-      
+
       private
-      
+
       def call_stack
         Thread.current[PENTHOUSE_RUNNER_CALL_STACK] ||= []
       end
-      
     end
   end
 end

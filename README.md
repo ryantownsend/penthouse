@@ -12,7 +12,9 @@ Penthouse is an alternative to the excellent [Apartment gem](https://github.com/
   - [Sidekiq](#sidekiq)
   - [Dictionary](#dictionary)
   - [Contributing](#contributing)
-    - [Testing](#testing)
+  - [Testing](#testing)
+    - [CI/Local](#cilocal)
+    - [Without Circle](#without-circle)
 
 ## Installation
 
@@ -93,11 +95,25 @@ require 'penthouse/sidekiq'
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/ryantownsend/penthouse.
 
-### Testing
+## Testing
+
+### CI/Local
+
+We use circle,a dn it can be used locally with docker. See:
+
+- [running circle locally](https://circleci.com/docs/2.0/local-cli/)
+- [Using postgres with circle](https://circleci.com/docs/2.0/postgres-config/)
+
+```bash
+echo <circle-api-token> | circleci setup
+circleci local execute
+```
+
+### Without Circle
 
 Docker is used for isolated testing. To test all supported versions run:
 
-```
+```bash
 make test
 ```
 
@@ -112,3 +128,5 @@ rbenv local $RUBY_VERSION
 RUBY_VERSION=$RUBY_VERSION RAILS_VERSION=4.2.11.1 PG_VERSION=0.21.0 bundle install
 RUBY_VERSION=$RUBY_VERSION RAILS_VERSION=4.2.11.1 PG_VERSION=0.21.0 bundle exec rsepc
 ```
+
+

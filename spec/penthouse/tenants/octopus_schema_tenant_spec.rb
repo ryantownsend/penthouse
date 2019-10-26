@@ -1,14 +1,14 @@
-require 'spec_helper'
-require 'octopus_helper'
-require 'penthouse/tenants/octopus_schema_tenant'
-require_relative '../../support/models'
+require "spec_helper"
+require "octopus_helper"
+require "penthouse/tenants/octopus_schema_tenant"
+require_relative "../../support/models"
 
 RSpec.describe Penthouse::Tenants::OctopusSchemaTenant do
   let(:schema_name) { "octopus_schema_tenant_test" }
   let(:persistent_schemas) { ["shared_extensions"] }
   let(:default_schema) { "public" }
-  let(:db_schema_file) { Pathname.new(File.join(File.dirname(__FILE__), '../../support/schema.rb')) }
-  let(:db_structure_file) { Pathname.new(File.join(File.dirname(__FILE__), '../../support/structure.sql')) }
+  let(:db_schema_file) { Pathname.new(File.join(File.dirname(__FILE__), "../../support/schema.rb")) }
+  let(:db_structure_file) { Pathname.new(File.join(File.dirname(__FILE__), "../../support/structure.sql")) }
 
   subject(:octopus_schema_tenant) {
     described_class.new(

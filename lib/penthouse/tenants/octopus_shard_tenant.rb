@@ -6,12 +6,11 @@
 # [1]: (https://github.com/thiagopradi/octopus)
 #
 
-require_relative './octopus_schema_tenant'
+require_relative "./octopus_schema_tenant"
 
 module Penthouse
   module Tenants
     class OctopusShardTenant < OctopusSchemaTenant
-
       attr_accessor :shard
       private :shard=
 

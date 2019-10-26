@@ -1,28 +1,5 @@
-require 'active_record'
-require 'active_support/core_ext/module/aliasing'
-
-module Penthouse
-  module Migration
-    def self.included(base)
-      base.class_eval do
-        # Verbose form of alias_method_chain which is now deprecated in ActiveSupport.
-        #
-        # This replaces the original #annouce method with #announce_with_penthouse
-        # but allows calling #annouce by using #announce_without_penthouse.
-        alias_method :announce_without_penthouse, :announce
-        alias_method :announce, :announce_with_penthouse
-      end
-    end
-
-    def announce_with_penthouse(message)
-      announce_without_penthouse("#{message} - #{current_tenant}")
-    end
-
-    def current_tenant
-      "Tenant: #{Penthouse.tenant || '*** global ***'}"
-    end
-  end
-end
+require "active_record"
+require "active_support/core_ext/module/aliasing"
 
 module Penthouse
   module Migrator
@@ -45,9 +22,9 @@ module Penthouse
 
           # override any new Octopus methods with the new Penthouse ones
           alias_method :migrate_with_octopus, :migrate_with_penthouse
-          alias_method :up_with_octopus,      :up_with_penthouse
-          alias_method :down_with_octopus,    :down_with_penthouse
-          alias_method :run_with_octopus,     :run_with_penthouse
+          alias_method :up_with_octopus, :up_with_penthouse
+          alias_method :down_with_octopus, :down_with_penthouse
+          alias_method :run_with_octopus, :run_with_penthouse
         end
 
         alias_method :migrate_without_penthouse, :migrate
@@ -57,7 +34,7 @@ module Penthouse
         alias_method :migrations, :migrations_with_penthouse
 
         # override any new Octopus methods with the new Penthouse ones
-        alias_method :migrate_with_octopus,    :migrate_with_penthouse
+        alias_method :migrate_with_octopus, :migrate_with_penthouse
         alias_method :migrations_with_octopus, :migrations_with_penthouse
       end
     end
@@ -137,5 +114,4 @@ module Penthouse
   end
 end
 
-ActiveRecord::Migration.send(:include, Penthouse::Migration)
-ActiveRecord::Migrator.send(:include, Penthouse::Migrator)
+ActiveRecord::Migrator.send(:include, Penthouse::Migrator) if ActiveRecord.version.release < Gem::Version.new("5.2.0")

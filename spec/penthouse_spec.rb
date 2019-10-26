@@ -1,21 +1,20 @@
-require 'spec_helper'
-require 'penthouse/tenants/base_tenant'
+require "spec_helper"
+require "penthouse/tenants/base_tenant"
 
 RSpec.describe Penthouse do
-
   subject(:penthouse) { described_class }
 
-  TestTenant = Class.new(Penthouse::Tenants::BaseTenant) do
+  TestTenant = Class.new(Penthouse::Tenants::BaseTenant) {
     def call(&block)
       block.yield(self)
     end
-  end
+  }
 
-  TestRunner = Class.new(Penthouse::Runners::BaseRunner) do
+  TestRunner = Class.new(Penthouse::Runners::BaseRunner) {
     def load_tenant(tenant_identifier:, **args)
       TestTenant.new(identifier: tenant_identifier)
     end
-  end
+  }
 
   let(:runner) { TestRunner.new }
 
@@ -25,12 +24,12 @@ RSpec.describe Penthouse do
     it "should set the tenant on the current thread" do
       penthouse.tenant = "main_thread"
       expect(penthouse.tenant).to eq("main_thread")
-      (1..3).to_a.map do |i|
+      (1..3).to_a.map { |i|
         Thread.new do
           penthouse.tenant = "thread_#{i}"
           expect(penthouse.tenant).to eq("thread_#{i}")
         end
-      end.each(&:join)
+      }.each(&:join)
       expect(penthouse.tenant).to eq("main_thread")
     end
   end
@@ -52,13 +51,13 @@ RSpec.describe Penthouse do
 
     fit "should use the proc defined by the configuration" do
       penthouse.configure do |config|
-        config.tenants = Proc.new { { one: "one", two: "two", three: "three" } }
+        config.tenants = proc { {one: "one", two: "two", three: "three"} }
       end
       @tenants = []
       penthouse.each_tenant(runner: runner) do |tenant|
         @tenants.push(tenant.identifier)
       end
-      expect(@tenants).to eq(%i(one two three))
+      expect(@tenants).to eq(%i[one two three])
     end
   end
 
@@ -73,7 +72,7 @@ RSpec.describe Penthouse do
         config.router = router_class
         config.runner = runner_class
         config.migrate_tenants = true
-        config.tenants = Proc.new { Hash.new }
+        config.tenants = proc { {} }
       end
       expect(subject.configuration.router).to eq(router_class)
       expect(subject.configuration.runner).to eq(runner_class)
@@ -91,8 +90,8 @@ RSpec.describe Penthouse do
       end
       expect(penthouse.tenant).to eq(original_tenant)
     end
-    
-    it 'should honour nested switches' do
+
+    it "should honour nested switches" do
       penthouse.switch(tenant_identifier: "outer_test", runner: runner) do |tenant|
         penthouse.switch(tenant_identifier: "inner_test", runner: runner) do |tenant|
           expect(penthouse.tenant).to eq("inner_test")
@@ -103,7 +102,6 @@ RSpec.describe Penthouse do
       end
       expect(penthouse.tenant).to eq(original_tenant)
     end
-    
   end
 
   context "when tenants are configured" do
@@ -111,19 +109,19 @@ RSpec.describe Penthouse do
 
     before(:each) do
       subject.configure do |config|
-        config.tenants = Proc.new { { one: "one", two: "two", three: "three" } }
+        config.tenants = proc { {one: "one", two: "two", three: "three"} }
       end
     end
 
     describe ".tenant_identifiers" do
       it "should return an array of the tenant keys" do
-        expect(subject.tenant_identifiers).to eq(%i(one two three))
+        expect(subject.tenant_identifiers).to eq(%i[one two three])
       end
     end
 
     describe ".tenants" do
       it "should return a hash as the result of the proc" do
-        expect(subject.tenants).to eq({ one: "one", two: "two", three: "three" })
+        expect(subject.tenants).to eq({one: "one", two: "two", three: "three"})
       end
     end
   end

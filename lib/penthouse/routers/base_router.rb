@@ -10,7 +10,6 @@
 module Penthouse
   module Routers
     class BaseRouter
-
       # @abstract typically used by the App to receive a request and return a tenant that can be switched to
       # @param request [Rack::Request] The request from the Rack app, used to determine the tenant
       # @return [String, Symbol] A tenant identifier
@@ -18,7 +17,6 @@ module Penthouse
       def self.call(request)
         raise NotImplementedError
       end
-
     end
   end
 end

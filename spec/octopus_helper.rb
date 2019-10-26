@@ -1,5 +1,5 @@
-require_relative './activerecord_helper'
-require 'octopus'
+require_relative "./activerecord_helper"
+require "octopus"
 
 Octopus.setup do |config|
   config.environments = [:test]

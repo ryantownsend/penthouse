@@ -1,11 +1,10 @@
-require 'sidekiq'
-require 'penthouse/sidekiq/middleware/client'
-require 'penthouse/sidekiq/middleware/server'
+require "sidekiq"
+require "penthouse/sidekiq/middleware/client"
+require "penthouse/sidekiq/middleware/server"
 
 module Penthouse
   module Sidekiq
     module Middleware
-
       def self.run
         ::Sidekiq.configure_client do |config|
           config.client_middleware do |chain|
@@ -27,4 +26,4 @@ module Penthouse
   end
 end
 
-require 'penthouse/sidekiq/railtie' if defined?(Rails)
+require "penthouse/sidekiq/railtie" if defined?(Rails)
