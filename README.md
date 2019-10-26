@@ -1,6 +1,18 @@
+# Penthouse
+
 [![Codeship Status](https://codeship.com/projects/c6513ab0-cc05-0133-94c6-0666c337ff82/status?branch=master)](https://codeship.com/projects/140114) [![Code Climate](https://codeclimate.com/github/ryantownsend/penthouse/badges/gpa.svg)](https://codeclimate.com/github/ryantownsend/penthouse) [![RubyDocs](https://img.shields.io/badge/rubydocs-click_here-blue.svg)](http://www.rubydoc.info/github/ryantownsend/penthouse)
 
 Penthouse is an alternative to the excellent [Apartment gem](https://github.com/influitive/apartment) – however Penthouse is more of a framework for multi-tenancy than a library, in that it provides less out-of-the-box functionality, but should make for easier customisation.
+
+- [Penthouse](#penthouse)
+  - [Installation](#installation)
+  - [Basic Usage](#basic-usage)
+  - [Octopus (shard) Usage](#octopus-shard-usage)
+  - [ActiveJob](#activejob)
+  - [Sidekiq](#sidekiq)
+  - [Dictionary](#dictionary)
+  - [Contributing](#contributing)
+    - [Testing](#testing)
 
 ## Installation
 
@@ -80,3 +92,23 @@ require 'penthouse/sidekiq'
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/ryantownsend/penthouse.
+
+### Testing
+
+Docker is used for isolated testing. To test all supported versions run:
+
+```
+make test
+```
+
+For specific versions see the `Makefile`.
+
+Alternatively you can tets any version locally with:
+
+```
+export RUBY_VERSION=2.5.0
+rbenv local $RUBY_VERSION
+
+RUBY_VERSION=$RUBY_VERSION RAILS_VERSION=4.2.11.1 PG_VERSION=0.21.0 bundle install
+RUBY_VERSION=$RUBY_VERSION RAILS_VERSION=4.2.11.1 PG_VERSION=0.21.0 bundle exec rsepc
+```

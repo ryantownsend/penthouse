@@ -24,7 +24,7 @@ module Penthouse
         end
       end
 
-      private 
+      private
 
       def read_schema(db_schema_file)
         case db_schema_file.extname
@@ -46,7 +46,7 @@ module Penthouse
 
       def load_sql_schema(db_schema_file)
         sql = process_schema_file(db_schema_file)
-        
+
         ActiveRecord::Base.transaction do
           with_limited_logging { ActiveRecord::Base.connection.execute(sql) }
         end
