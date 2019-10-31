@@ -30,9 +30,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rack", "~> 1.6.4"
   # db
   spec.add_development_dependency "ar-octopus", "~> 0.10.2"
-  spec.add_development_dependency "activesupport", ENV.fetch("RAILS_VERSION", "4.2.2").to_s
-  spec.add_development_dependency "activerecord", ENV.fetch("RAILS_VERSION", "4.2.2").to_s
-  spec.add_development_dependency "pg", ENV.fetch("PG_VERSION", "0.19.0").to_s
+  spec.add_development_dependency "activesupport", ">= 4.2.2"
+  spec.add_development_dependency "activerecord", ">= 4.2.2"
+  spec.add_development_dependency "pg", ">= 0.19.0"
 
   spec.add_development_dependency "guard-rspec"
   spec.add_development_dependency "pry"

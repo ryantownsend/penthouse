@@ -45,43 +45,43 @@ module Penthouse
     end
 
     module ClassMethods
-      def migrate_with_penthouse(migrations_paths, target_version = nil, &block)
+      def migrate_with_penthouse(target_version = nil, &block)
         unless Penthouse.configuration.migrate_tenants?
-          return migrate_without_penthouse(migrations_paths, target_version, &block)
+          return migrate_without_penthouse(target_version, &block)
         end
 
         wrap_penthouse do
-          migrate_without_penthouse(migrations_paths, target_version, &block)
+          migrate_without_penthouse(target_version, &block)
         end
       end
 
-      def up_with_penthouse(migrations_paths, target_version = nil, &block)
+      def up_with_penthouse(target_version = nil, &block)
         unless Penthouse.configuration.migrate_tenants?
-          return up_without_penthouse(migrations_paths, target_version, &block)
+          return up_without_penthouse(target_version, &block)
         end
 
         wrap_penthouse do
-          up_without_penthouse(migrations_paths, target_version)
+          up_without_penthouse(target_version)
         end
       end
 
-      def down_with_penthouse(migrations_paths, target_version = nil, &block)
+      def down_with_penthouse(target_version = nil, &block)
         unless Penthouse.configuration.migrate_tenants?
-          return down_without_penthouse(migrations_paths, target_version)
+          return down_without_penthouse(target_version)
         end
 
         wrap_penthouse do
-          down_without_penthouse(migrations_paths, target_version)
+          down_without_penthouse(target_version)
         end
       end
 
-      def run_with_penthouse(direction, migrations_paths, target_version)
+      def run_with_penthouse(direction, target_version)
         unless Penthouse.configuration.migrate_tenants?
-          return run_without_penthouse(direction, migrations_paths, target_version)
+          return run_without_penthouse(direction, target_version)
         end
 
         wrap_penthouse do
-          run_without_penthouse(direction, migrations_paths, target_version)
+          run_without_penthouse(direction, target_version)
         end
       end
 
