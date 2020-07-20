@@ -1,5 +1,4 @@
 source "https://rubygems.org"
-ruby ENV.fetch("RUBY_VERSION", "2.3.0")
 
 group :test do
   gem "activesupport", ENV.fetch("RAILS_VERSION", "4.2.2").to_s
