@@ -35,7 +35,7 @@ jobs:
       - run: RAILS_VERSION=<< parameters.rails >> PG_VERSION=<< parameters.postgres >> bundle exec rspec
 
 workflows:
-  version: 2.1
+  version: 2
   test-ruby-builds:
     jobs:
       - lint
@@ -47,7 +47,7 @@ workflows:
               rails: ["4.2.11.1", "5.1.6.2", "5.1.7", "5.2.3", "6.0.0"]
               postgres: ["0.21.0"]
             exclude:
-              - ruby: "ruby-2_4_1"
-                rails: "6.0.0"
+              - ruby: ["ruby-2_4_1"]
+                rails: ["6.0.0"]
           requires:
             - lint
