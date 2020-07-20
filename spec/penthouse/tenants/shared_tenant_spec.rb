@@ -17,5 +17,11 @@ RSpec.describe Penthouse::Tenants::SharedTenant do
         expect(ActiveRecord::Base.connection.schema_search_path).to include("public")
       end
     end
+
+    it "should yield the tenant" do
+      subject.call do |tenant|
+        expect(tenant).to be_kind_of(described_class)
+      end
+    end
   end
 end
