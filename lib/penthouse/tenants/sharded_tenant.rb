@@ -1,5 +1,5 @@
 #
-# The OctopusShardTenant class relies upon Octopus [1], it switches to a
+# The ShardedTenant class relies upon Octopus [1], it switches to a
 # different shard per tenant, allowing for each tenant to have their own
 # database, 100% isolated from other tenants in terms of data and performance.
 #

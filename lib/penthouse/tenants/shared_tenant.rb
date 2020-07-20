@@ -1,8 +1,9 @@
 #
-# The OctopusSchemaTenant class relies upon Octopus [1], it uses the master
-# database and simply switches the schema search path to allow for isolated
-# data, but low overheads in terms of costs. Note: this means tenants will be
-# sharing a single Postgres instance and therefore performance is shared.
+# The SharedTenant class relies upon Octopus [1], it uses the master
+# database and expects queries to be scoped by a tenant column
+#
+# Note: this means tenants will be sharing a single Postgres instance and
+# therefore performance is shared.
 #
 # [1]: (https://github.com/thiagopradi/octopus)
 #
