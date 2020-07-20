@@ -23,19 +23,19 @@ module Penthouse
       # @yield [BaseTenant] The current tenant instance
       # @return [void]
       def call(&block)
-        raise NotImplementedError
+        raise NotImplementedError, "#{self.class.name}#call is not implemented"
       end
 
       # @abstract creates the tenant data store
       # @return [void]
       def create(*)
-        raise NotImplementedError
+        raise NotImplementedError, "#{self.class.name}#create is not implemented"
       end
 
       # @abstract deletes the tenant data store
       # @return [void]
       def delete(*)
-        raise NotImplementedError
+        raise NotImplementedError, "#{self.class.name}#delete is not implemented"
       end
     end
   end
