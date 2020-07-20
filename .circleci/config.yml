@@ -14,10 +14,7 @@ executors:
 
 jobs:
   lint:
-    docker:
-      - image: circleci/ruby:2.4.1
-      - image: circleci/postgres:9.6.2-alpine
-        name: postgres
+    executor: ruby-2_4_1
     steps:
       - checkout
       - run: bundle install
@@ -43,11 +40,14 @@ workflows:
     jobs:
       - lint
       - build:
-          name: Test Rails v.<< matrix.rails >>
+          name: Rails v.<< matrix.rails >> Ruby << matrix.ruby >>
           matrix:
             parameters:
               ruby: ["ruby-2_4_1", "ruby-2_5_0"]
               rails: ["4.2.11.1", "5.1.6.2", "5.1.7", "5.2.3", "6.0.0"]
               postgres: ["0.21.0"]
+            exclude:
+              - ruby: "ruby-2_4_1"
+                rails: "6.0.0"
           requires:
             - lint
