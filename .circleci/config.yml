@@ -15,18 +15,17 @@ jobs:
         type: string
     steps:
       - checkout
-      - run: bundle install
       - run: RUBY_VERSION=<< parameters.ruby >> RAILS_VERSION=<< parameters.rails >> PG_VERSION=<< parameters.postgres >> bundle install
       - run: RUBY_VERSION=<< parameters.ruby >> RAILS_VERSION=<< parameters.rails >> PG_VERSION=<< parameters.postgres >> bundle exec rspec
-      - run: rm Gemfile.lock
 
 workflows:
   version: 2.1
   test-ruby-builds:
     jobs:
       - build:
+          name: Test Rails v.<< matrix.rails >>
           matrix:
             parameters:
               ruby: ["2.4.1"]
-              rails: ["4.2.11.1", "5.1.6.2", "5.1.7"]
+              rails: ["4.2.11.1", "5.1.6.2", "5.1.7", "5.2.3", "6.0.0"]
               postgres: ["0.21.0"]
