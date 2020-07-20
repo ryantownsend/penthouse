@@ -1,6 +1,6 @@
-require 'spec_helper'
-require 'octopus_helper'
-require 'penthouse/tenants/shared_tenant'
+require "spec_helper"
+require "octopus_helper"
+require "penthouse/tenants/shared_tenant"
 
 RSpec.describe Penthouse::Tenants::SharedTenant do
   subject { described_class.new(identifier: "test") }

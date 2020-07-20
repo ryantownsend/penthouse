@@ -6,7 +6,7 @@
 # [1]: (https://github.com/thiagopradi/octopus)
 #
 
-require_relative './shared_tenant'
+require_relative "./shared_tenant"
 
 module Penthouse
   module Tenants
