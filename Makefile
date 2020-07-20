@@ -18,4 +18,3 @@ test:
 	make test-4.2.11.1
 	make test-5.1.7
 	make test-5.2.3
-	make test-6.0.0
