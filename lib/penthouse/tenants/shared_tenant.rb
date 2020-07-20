@@ -8,13 +8,12 @@
 # [1]: (https://github.com/thiagopradi/octopus)
 #
 
-require_relative './base_tenant'
-require 'octopus'
+require_relative "./base_tenant"
+require "octopus"
 
 module Penthouse
   module Tenants
     class SharedTenant < BaseTenant
-
       # ensures we're on the correct Octopus shard, then executes the query
       # @param shard [String, Symbol] The shard to execute within, usually master
       # @param block [Block] The code to execute within the schema
