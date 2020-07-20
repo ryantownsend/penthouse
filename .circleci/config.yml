@@ -18,12 +18,22 @@ jobs:
       - run: RUBY_VERSION=2.4.1 RAILS_VERSION=4.2.11.1 PG_VERSION=0.21.0 bundle exec rspec
       - run: rm Gemfile.lock
 
+      - run: RUBY_VERSION=2.4.1 RAILS_VERSION=5.1.6.2 PG_VERSION=0.21.0 bundle install
+      - run: RUBY_VERSION=2.4.1 RAILS_VERSION=5.1.6.2 PG_VERSION=0.21.0 bundle exec rspec
+      - run: rm Gemfile.lock
+
       - run: RUBY_VERSION=2.4.1 RAILS_VERSION=5.1.7 PG_VERSION=0.21.0 bundle install
       - run: RUBY_VERSION=2.4.1 RAILS_VERSION=5.1.7 PG_VERSION=0.21.0 bundle exec rspec
       - run: rm Gemfile.lock
-      # Uncomment when adding support for greater rails versions
+      #
       #
       # - run: RUBY_VERSION=2.4.1 RAILS_VERSION=5.2.3 PG_VERSION=1.1.4 bundle install
       # - run: RUBY_VERSION=2.4.1 RAILS_VERSION=5.2.3 PG_VERSION=1.1.4 bundle exec rspec
+      # - run: rm Gemfile.lock
+      #
+      # Fails with `NameError: undefined method `migrate' for class `#<Class:ActiveRecord::Migrator>'`
+      #
+      # Uncomment when adding support for greater rails versions
+      #
       # - run: RUBY_VERSION=2.4.1 RAILS_VERSION=6.0.0 PG_VERSION=0.21.0 bundle install
       # - run: RUBY_VERSION=2.4.1 RAILS_VERSION=6.0.0 PG_VERSION=0.21.0 bundle exec rspec
