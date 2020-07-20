@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 jobs:
   build:
     docker:
@@ -6,34 +6,27 @@ jobs:
 
       - image: circleci/postgres:9.6.2-alpine
         name: postgres
-
+    parameters:
+      ruby:
+        type: string
+      rails:
+        type: string
+      postgres:
+        type: string
     steps:
       - checkout
-
       - run: bundle install
-      - run: bundle exec standardrb
+      - run: RUBY_VERSION=<< parameters.ruby >> RAILS_VERSION=<< parameters.rails >> PG_VERSION=<< parameters.postgres >> bundle install
+      - run: RUBY_VERSION=<< parameters.ruby >> RAILS_VERSION=<< parameters.rails >> PG_VERSION=<< parameters.postgres >> bundle exec rspec
       - run: rm Gemfile.lock
 
-      - run: RUBY_VERSION=2.4.1 RAILS_VERSION=4.2.11.1 PG_VERSION=0.21.0 bundle install
-      - run: RUBY_VERSION=2.4.1 RAILS_VERSION=4.2.11.1 PG_VERSION=0.21.0 bundle exec rspec
-      - run: rm Gemfile.lock
-
-      - run: RUBY_VERSION=2.4.1 RAILS_VERSION=5.1.6.2 PG_VERSION=0.21.0 bundle install
-      - run: RUBY_VERSION=2.4.1 RAILS_VERSION=5.1.6.2 PG_VERSION=0.21.0 bundle exec rspec
-      - run: rm Gemfile.lock
-
-      - run: RUBY_VERSION=2.4.1 RAILS_VERSION=5.1.7 PG_VERSION=0.21.0 bundle install
-      - run: RUBY_VERSION=2.4.1 RAILS_VERSION=5.1.7 PG_VERSION=0.21.0 bundle exec rspec
-      - run: rm Gemfile.lock
-      #
-      #
-      # - run: RUBY_VERSION=2.4.1 RAILS_VERSION=5.2.3 PG_VERSION=1.1.4 bundle install
-      # - run: RUBY_VERSION=2.4.1 RAILS_VERSION=5.2.3 PG_VERSION=1.1.4 bundle exec rspec
-      # - run: rm Gemfile.lock
-      #
-      # Fails with `NameError: undefined method `migrate' for class `#<Class:ActiveRecord::Migrator>'`
-      #
-      # Uncomment when adding support for greater rails versions
-      #
-      # - run: RUBY_VERSION=2.4.1 RAILS_VERSION=6.0.0 PG_VERSION=0.21.0 bundle install
-      # - run: RUBY_VERSION=2.4.1 RAILS_VERSION=6.0.0 PG_VERSION=0.21.0 bundle exec rspec
+workflows:
+  version: 2.1
+  test-ruby-builds:
+    jobs:
+      - build:
+          matrix:
+            parameters:
+              ruby: ["2.4.1"]
+              rails: ["4.2.11.1", "5.1.6.2", "5.1.7"]
+              postgres: ["0.21.0"]
