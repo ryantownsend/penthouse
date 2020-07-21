@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
   # web
   spec.add_development_dependency "rack", "~> 1.6.4"
   # db
-  spec.add_development_dependency "ar-octopus", "~> 0.8.6"
+  spec.add_development_dependency "ar-octopus", "~> 0.10.2"
   spec.add_development_dependency "activesupport", ">= 4.2.2"
   spec.add_development_dependency "activerecord", ">= 4.2.2"
   spec.add_development_dependency "pg", ">= 0.19.0"
