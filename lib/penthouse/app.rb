@@ -9,7 +9,7 @@
 # application within that tenant.
 #
 
-require 'rack/request'
+require "rack/request"
 
 module Penthouse
   class App

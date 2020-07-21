@@ -1,6 +1,6 @@
-require 'spec_helper'
-require 'octopus_helper'
-require 'penthouse/tenants/sharded_tenant'
+require "spec_helper"
+require "octopus_helper"
+require "penthouse/tenants/sharded_tenant"
 
 RSpec.describe Penthouse::Tenants::ShardedTenant do
   subject { described_class.new(identifier: shard_name, shard: shard_name) }
@@ -32,9 +32,9 @@ RSpec.describe Penthouse::Tenants::ShardedTenant do
       let(:shard_name) { "invalid_shard" }
 
       it "should raise an exception" do
-        expect do
+        expect {
           subject.call { true }
-        end.to raise_error(RuntimeError)
+        }.to raise_error(RuntimeError)
       end
     end
   end

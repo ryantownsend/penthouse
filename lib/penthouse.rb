@@ -6,7 +6,7 @@ require "penthouse/runners/base_runner"
 
 module Penthouse
   class TenantNotFound < RuntimeError; end
-  CURRENT_TENANT_KEY = 'penthouse_tenant'.freeze
+  CURRENT_TENANT_KEY = "penthouse_tenant".freeze
 
   class << self
     # Retrieves the currently active tenant identifier
@@ -29,7 +29,7 @@ module Penthouse
     # @param block [Block] the code to execute
     # @yield [String, Symbol] the identifier for the tenant
     # @return [void]
-    def with_tenant(tenant_identifier:, default_tenant: self.tenant, &block)
+    def with_tenant(tenant_identifier:, default_tenant: tenant, &block)
       self.tenant = tenant_identifier
       block.yield(tenant_identifier)
     ensure
@@ -43,7 +43,7 @@ module Penthouse
     # @param block [Block] the code to execute
     # @yield [String, Symbol] the identifier for the tenant
     # @return [void]
-    def each_tenant(tenant_identifiers: self.tenant_identifiers, runner: self.configuration.runner, &block)
+    def each_tenant(tenant_identifiers: self.tenant_identifiers, runner: configuration.runner, &block)
       tenant_identifiers.each do |tenant_identifier|
         switch(tenant_identifier: tenant_identifier, runner: runner, &block)
       end
@@ -55,7 +55,7 @@ module Penthouse
     # @param block [Block] the code to execute
     # @yield [Penthouse::Tenants::BaseTenant] the tenant instance
     # @return [void]
-    def switch(tenant_identifier:, runner: self.configuration.runner, &block)
+    def switch(tenant_identifier:, runner: configuration.runner, &block)
       runner.call(tenant_identifier: tenant_identifier, &block)
     end
 
@@ -63,7 +63,7 @@ module Penthouse
     # @param tenant_identifier [String, Symbol] the identifier for the tenant
     # @see Penthouse::Tenants::BaseTenant#delete
     # @return [void]
-    def create(tenant_identifier:, runner: self.configuration.runner, **options)
+    def create(tenant_identifier:, runner: configuration.runner, **options)
       switch(tenant_identifier: tenant_identifier, runner: runner) do |tenant|
         tenant.create(**options)
       end
@@ -73,7 +73,7 @@ module Penthouse
     # @param tenant_identifier [String, Symbol] the identifier for the tenant
     # @see Penthouse::Tenants::BaseTenant#delete
     # @return [void]
-    def delete(tenant_identifier:, runner: self.configuration.runner, **options)
+    def delete(tenant_identifier:, runner: configuration.runner, **options)
       switch(tenant_identifier: tenant_identifier, runner: runner) do |tenant|
         tenant.delete(**options)
       end
@@ -84,9 +84,9 @@ module Penthouse
     # @return [void]
     def configure(&block)
       # allow the configuration by the block
-      block.yield(self.configuration)
+      block.yield(configuration)
       # prevent modification of configuration once set
-      self.configuration.freeze
+      configuration.freeze
     end
 
     # Returns the current configuration of Penthouse

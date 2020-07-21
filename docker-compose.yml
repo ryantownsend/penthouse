@@ -1,0 +1,30 @@
+version: '3.5'
+
+services:
+  postgres:
+    image: postgres:10.5-alpine
+    ports:
+      - 5432
+    networks:
+      penthouse:
+      default:
+
+  penthouse:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+      args:
+        RUBY_VERSION: ${RUBY_VERSION:-2.5.0}
+        RAILS_VERSION: ${RAILS_VERSION:-5.1.7}
+        PG_VERSION: ${PG_VERSION:-1.1.4}
+        RAILS_ENV: test
+    networks:
+      penthouse:
+      default:
+    depends_on:
+      - postgres
+
+networks:
+  penthouse:
+    driver: bridge
+    name: penthouse

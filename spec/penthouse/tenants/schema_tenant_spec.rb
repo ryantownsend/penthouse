@@ -1,6 +1,6 @@
-require 'spec_helper'
-require 'activerecord_helper'
-require 'penthouse/tenants/schema_tenant'
+require "spec_helper"
+require "activerecord_helper"
+require "penthouse/tenants/schema_tenant"
 
 RSpec.describe Penthouse::Tenants::SchemaTenant do
   let(:schema_name) { "schema_tenant_test" }
@@ -9,10 +9,9 @@ RSpec.describe Penthouse::Tenants::SchemaTenant do
 
   subject(:schema_tenant) do
     described_class.new(identifier: schema_name,
-      tenant_schema: schema_name,
-      persistent_schemas: persistent_schemas,
-      default_schema: default_schema
-    )
+                        tenant_schema: schema_name,
+                        persistent_schemas: persistent_schemas,
+                        default_schema: default_schema)
   end
 
   describe "#call" do

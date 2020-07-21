@@ -1,0 +1,18 @@
+octopus:
+  default: &default
+    host: postgres
+    adapter: postgresql
+    encoding: unicode
+    pool: 10
+    port: 5432
+    username: postgres
+    password: admin
+
+  shards:
+    one:
+      <<: *default
+      database: penthouse_octopus_one
+
+    two:
+      <<: *default
+      database: penthouse_octopus_two

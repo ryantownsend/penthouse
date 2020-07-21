@@ -1,5 +1,5 @@
-require 'active_record'
-require 'active_support/core_ext/module/aliasing'
+require "active_record"
+require "active_support/core_ext/module/aliasing"
 
 module Penthouse
   module Migration
@@ -19,7 +19,7 @@ module Penthouse
     end
 
     def current_tenant
-      "Tenant: #{Penthouse.tenant || '*** global ***'}"
+      "Tenant: #{Penthouse.tenant || "*** global ***"}"
     end
   end
 end
@@ -45,9 +45,9 @@ module Penthouse
 
           # override any new Octopus methods with the new Penthouse ones
           alias_method :migrate_with_octopus, :migrate_with_penthouse
-          alias_method :up_with_octopus,      :up_with_penthouse
-          alias_method :down_with_octopus,    :down_with_penthouse
-          alias_method :run_with_octopus,     :run_with_penthouse
+          alias_method :up_with_octopus, :up_with_penthouse
+          alias_method :down_with_octopus, :down_with_penthouse
+          alias_method :run_with_octopus, :run_with_penthouse
         end
 
         alias_method :migrate_without_penthouse, :migrate
@@ -57,7 +57,7 @@ module Penthouse
         alias_method :migrations, :migrations_with_penthouse
 
         # override any new Octopus methods with the new Penthouse ones
-        alias_method :migrate_with_octopus,    :migrate_with_penthouse
+        alias_method :migrate_with_octopus, :migrate_with_penthouse
         alias_method :migrations_with_octopus, :migrations_with_penthouse
       end
     end

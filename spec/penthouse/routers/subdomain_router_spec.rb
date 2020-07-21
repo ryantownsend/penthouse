@@ -1,6 +1,6 @@
-require 'spec_helper'
-require 'penthouse/routers/subdomain_router'
-require 'rack/request'
+require "spec_helper"
+require "penthouse/routers/subdomain_router"
+require "rack/request"
 
 RSpec.describe Penthouse::Routers::SubdomainRouter do
   describe ".call" do

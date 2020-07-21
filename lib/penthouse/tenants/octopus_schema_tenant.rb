@@ -7,13 +7,12 @@
 # [1]: (https://github.com/thiagopradi/octopus)
 #
 
-require_relative './schema_tenant'
-require 'octopus'
+require_relative "./schema_tenant"
+require "octopus"
 
 module Penthouse
   module Tenants
     class OctopusSchemaTenant < SchemaTenant
-
       # ensures we're on the correct Octopus shard, then just updates the schema
       # name with the tenant name
       # @param shard [String, Symbol] The shard to execute within, usually master
