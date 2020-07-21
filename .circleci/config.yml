@@ -1,39 +1,65 @@
-version: 2
-jobs:
-  build:
+version: 2.1
+
+executors:
+  r-2_4_1:
     docker:
       - image: circleci/ruby:2.4.1
-
+      - image: circleci/postgres:9.6.2-alpine
+        name: postgres
+  r-2_5_0:
+    docker:
+      - image: circleci/ruby:2.4.1
       - image: circleci/postgres:9.6.2-alpine
         name: postgres
 
+jobs:
+  lint:
+    executor: r-2_4_1
+    environment:
+      CC_TEST_REPORTER_ID: 8d09c8757fdc93f124bf51fb34c8ffaba441173fde619eac3b93f1332ccd8953
     steps:
       - checkout
-
+      - run:
+          name: Download cc-test-reporter
+          command: |
+            mkdir -p tmp/
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./tmp/cc-test-reporter
+            chmod +x ./tmp/cc-test-reporter
       - run: bundle install
       - run: bundle exec standardrb
-      - run: rm Gemfile.lock
+      - run:
+          name: Setup code climate
+          command: ./tmp/cc-test-reporter before-build
+      - run: bundle exec rspec
+      - run:
+          name: Report to code climate
+          command: ./tmp/cc-test-reporter after-build
 
-      - run: RUBY_VERSION=2.4.1 RAILS_VERSION=4.2.11.1 PG_VERSION=0.21.0 bundle install
-      - run: RUBY_VERSION=2.4.1 RAILS_VERSION=4.2.11.1 PG_VERSION=0.21.0 bundle exec rspec
-      - run: rm Gemfile.lock
+  build:
+    parameters:
+      ruby:
+        type: executor
+      rails:
+        type: string
+      postgres:
+        type: string
+    executor: << parameters.ruby >>
+    steps:
+      - checkout
+      - run: RAILS_VERSION=<< parameters.rails >> PG_VERSION=<< parameters.postgres >> bundle install
+      - run: RAILS_VERSION=<< parameters.rails >> PG_VERSION=<< parameters.postgres >> bundle exec rspec
 
-      - run: RUBY_VERSION=2.4.1 RAILS_VERSION=5.1.6.2 PG_VERSION=0.21.0 bundle install
-      - run: RUBY_VERSION=2.4.1 RAILS_VERSION=5.1.6.2 PG_VERSION=0.21.0 bundle exec rspec
-      - run: rm Gemfile.lock
-
-      - run: RUBY_VERSION=2.4.1 RAILS_VERSION=5.1.7 PG_VERSION=0.21.0 bundle install
-      - run: RUBY_VERSION=2.4.1 RAILS_VERSION=5.1.7 PG_VERSION=0.21.0 bundle exec rspec
-      - run: rm Gemfile.lock
-      #
-      #
-      # - run: RUBY_VERSION=2.4.1 RAILS_VERSION=5.2.3 PG_VERSION=1.1.4 bundle install
-      # - run: RUBY_VERSION=2.4.1 RAILS_VERSION=5.2.3 PG_VERSION=1.1.4 bundle exec rspec
-      # - run: rm Gemfile.lock
-      #
-      # Fails with `NameError: undefined method `migrate' for class `#<Class:ActiveRecord::Migrator>'`
-      #
-      # Uncomment when adding support for greater rails versions
-      #
-      # - run: RUBY_VERSION=2.4.1 RAILS_VERSION=6.0.0 PG_VERSION=0.21.0 bundle install
-      # - run: RUBY_VERSION=2.4.1 RAILS_VERSION=6.0.0 PG_VERSION=0.21.0 bundle exec rspec
+workflows:
+  version: 2
+  test-r-builds:
+    jobs:
+      - lint
+      - build:
+          name: Rails:<< matrix.rails >>:<< matrix.ruby >>:pg-<< matrix.postgres >>
+          matrix:
+            parameters:
+              ruby: ["r-2_4_1", "r-2_5_0"]
+              rails: ["4.2.11.1", "5.1.6.2", "5.1.7"] # "5.2.3",  "6.0.0" ]
+              postgres: ["0.21.0"]
+          requires:
+            - lint
