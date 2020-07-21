@@ -1,16 +1,23 @@
+prepare:
+  fetch:
+    - url: "https://raw.githubusercontent.com/testdouble/standard/master/config/base.yml"
+      path: "rubocop-from-github.yml"
+plugins:
+  rubocop:
+    enabled: true
+    channel: rubocop-0-74
+    config:
+      file: "rubocop-from-github.yml"
 engines:
   duplication:
     enabled: true
     config:
       languages:
-      - ruby
+        - ruby
   reek:
     enabled: true
   bundler-audit:
-    enabled: true
-  rubocop:
-    enabled: true
+    enabled: false
 ratings:
   paths:
-    - Gemfile.lock
     - "**.rb"
