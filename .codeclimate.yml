@@ -8,16 +8,10 @@ plugins:
     channel: rubocop-0-74
     config:
       file: "rubocop-from-github.yml"
-engines:
-  duplication:
-    enabled: true
-    config:
-      languages:
-        - ruby
   reek:
     enabled: true
-  bundler-audit:
-    enabled: false
+  brakeman:
+    enabled: true
 ratings:
   paths:
     - "**.rb"
