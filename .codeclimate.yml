@@ -10,8 +10,6 @@ plugins:
       file: "rubocop-from-github.yml"
   reek:
     enabled: true
-  brakeman:
-    enabled: true
 ratings:
   paths:
     - "**.rb"
