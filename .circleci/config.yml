@@ -13,7 +13,7 @@ executors:
         name: postgres
 
 jobs:
-  lint-and-test-coverage:
+  lint:
     executor: r-2_4_1
     environment:
       CC_TEST_REPORTER_ID: 8d09c8757fdc93f124bf51fb34c8ffaba441173fde619eac3b93f1332ccd8953
