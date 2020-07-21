@@ -13,12 +13,27 @@ executors:
         name: postgres
 
 jobs:
-  lint:
+  lint-and-test-coverage:
     executor: r-2_4_1
+    environment:
+      CC_TEST_REPORTER_ID: 8d09c8757fdc93f124bf51fb34c8ffaba441173fde619eac3b93f1332ccd8953
     steps:
       - checkout
+      - run:
+          name: Download cc-test-reporter
+          command: |
+            mkdir -p tmp/
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./tmp/cc-test-reporter
+            chmod +x ./tmp/cc-test-reporter
       - run: bundle install
       - run: bundle exec standardrb
+      - run:
+          name: Setup code climate
+          command: ./tmp/cc-test-reporter before-build
+      - run: bundle exec rspec
+      - run:
+          name: Report to code climate
+          command: ./tmp/cc-test-reporter after-build
 
   build:
     parameters:
@@ -40,11 +55,11 @@ workflows:
     jobs:
       - lint
       - build:
-          name: Rails:<< matrix.rails >>:<< matrix.ruby >>
+          name: Rails:<< matrix.rails >>:<< matrix.ruby >>:pg-<< matrix.postgres >>
           matrix:
             parameters:
               ruby: ["r-2_4_1", "r-2_5_0"]
               rails: ["4.2.11.1", "5.1.6.2", "5.1.7", "5.2.3"] # "6.0.0"
-              postgres: ["0.19.0", "0.21.0"]
+              postgres: ["0.21.0"]
           requires:
             - lint
