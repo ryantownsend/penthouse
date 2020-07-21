@@ -114,5 +114,4 @@ module Penthouse
   end
 end
 
-ActiveRecord::Migration.send(:include, Penthouse::Migration)
-ActiveRecord::Migrator.send(:include, Penthouse::Migrator)
+ActiveRecord::Migrator.send(:include, Penthouse::Migrator) if ActiveRecord.version.release < Gem::Version.new("5.2.0")
